@@ -1,0 +1,98 @@
+<!--
+  Authors : initappz (Rahul Jograna)
+  Website : https://initappz.com/
+  App Name : Doctor-Appointment - 1 This App Template Source code is licensed as per the
+  terms found in the Website https://initappz.com/license
+  Copyright and Good Faith Purchasers © 2023-present initappz.
+-->
+<ion-header class="ion-no-border">
+  <ion-toolbar mode="ios">
+    <ion-buttons slot="start">
+      <ion-button (click)="onBack()" color="dark">
+        <ion-icon slot="icon-only" name="arrow-back-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Reviews</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <div class="review-screen">
+    <div class="card-content">
+      <ion-label class="lbl">Your Review Performance is <span class="active">Good</span></ion-label>
+    </div>
+    <div class="filter-btn">
+      <div
+        [class]="active == 'latest' ? 'ion-activatable ripple-parent active-btn' :'ion-activatable ripple-parent btn'"
+        (click)="changeActive('latest')">
+        <ion-ripple-effect></ion-ripple-effect>
+        <ion-label class="lbl">Latest</ion-label>
+        <ion-icon name="chevron-down" [color]="active == 'latest' ? 'light':'dark'"></ion-icon>
+      </div>
+
+      <div [class]="active == 'all' ? 'ion-activatable ripple-parent active-btn' :'ion-activatable ripple-parent btn'"
+        (click)="changeActive('all')">
+        <ion-ripple-effect></ion-ripple-effect>
+        <ion-label class="lbl">All Rating</ion-label>
+        <ion-icon name="chevron-down" [color]="active == 'all' ? 'light':'dark'"></ion-icon>
+      </div>
+
+      <div [class]="active == 'star' ? 'ion-activatable ripple-parent active-btn' :'ion-activatable ripple-parent btn'"
+        (click)="changeActive('star')">
+        <ion-ripple-effect></ion-ripple-effect>
+        <ion-label class="lbl">5 Star</ion-label>
+        <ion-icon name="chevron-down" [color]="active == 'star' ? 'light':'dark'"></ion-icon>
+      </div>
+    </div>
+
+    <div class="total-content">
+      <ion-row class="row-content">
+        <ion-col size="6" style="border-right: 1px solid lightgray;">
+          <div class="header-content">
+            <img src="assets/images/images/like.png" alt="" class="img">
+            <ion-label class="lbl">Positive Reviews</ion-label>
+          </div>
+          <ion-label class="total-count">852</ion-label>
+          <div class="bottom-content">
+            <ion-icon name="arrow-up" color="success"></ion-icon>
+            <ion-label class="lbl"> <span class="success">14% </span> From Last 7 Days </ion-label>
+          </div>
+        </ion-col>
+        <ion-col size="6">
+          <div class="header-content">
+            <img src="assets/images/images/like-down.png" alt="" class="img">
+            <ion-label class="lbl">Negative Reviews</ion-label>
+          </div>
+          <ion-label class="total-count">45</ion-label>
+          <div class="bottom-content">
+            <ion-icon name="arrow-down" color="danger"></ion-icon>
+            <ion-label class="lbl"> <span class="danger">3% </span> From Last 7 Days </ion-label>
+          </div>
+        </ion-col>
+      </ion-row>
+    </div>
+
+    <div class="review-list">
+      <div class="review-content" *ngFor="let item of util.userList;">
+        <div class="rates">
+          <ion-icon name="star" color="warning"></ion-icon>
+          <ion-label class="lbl">4.5</ion-label>
+        </div>
+        <div class="top-content">
+          <div class="avatar" [ngStyle]="{'background-image': 'url('+item.image+')'}"></div>
+          <div class="name-content">
+            <ion-label class="name"> {{item.name}} </ion-label>
+            <ion-label class="time">04 Days Ago</ion-label>
+          </div>
+        </div>
+        <ion-label class="decs">Scio enim esse quosdam, qui quavis lingu philoso phari possint tradunt et
+          docent.</ion-label>
+      </div>
+    </div>
+  </div>
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button color="danger" (click)="onCreate()">
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+</ion-content>

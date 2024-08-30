@@ -1,0 +1,129 @@
+<!--
+  Authors : initappz (Rahul Jograna)
+  Website : https://initappz.com/
+  App Name : Doctor-Appointment - 1 This App Template Source code is licensed as per the
+  terms found in the Website https://initappz.com/license
+  Copyright and Good Faith Purchasers © 2023-present initappz.
+-->
+<ion-header class="ion-no-border">
+  <ion-toolbar mode="ios">
+    <ion-buttons slot="start">
+      <ion-button (click)="onBack()" color="dark">
+        <ion-icon slot="icon-only" name="arrow-back-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Appointment Details</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <div class="appointment-details-screen">
+    <ion-card mode="ios" class="card-content">
+      <ion-row class="row-content">
+        <ion-col size="3">
+          <div class="doc-cover" [ngStyle]="{'background-image': 'url(assets/images/doctors/1.jpg)'}"></div>
+        </ion-col>
+        <ion-col size="9">
+          <div class="name-content">
+            <ion-label class="type"> Gynecological related issues </ion-label>
+            <ion-label class="name"> Dr. Jonathan A. Cave </ion-label>
+            <ion-label class="date">15 July 01:30 AM</ion-label>
+            <div class="rates">
+              <ion-icon slot="icon-only" name="star" color="warning"></ion-icon>
+              <ion-icon slot="icon-only" name="star" color="warning"></ion-icon>
+              <ion-icon slot="icon-only" name="star" color="warning"></ion-icon>
+              <ion-icon slot="icon-only" name="star" color="warning"></ion-icon>
+              <ion-icon slot="icon-only" name="star-outline" color="dark"></ion-icon>
+              <ion-label class="lbl">(528)</ion-label>
+            </div>
+          </div>
+        </ion-col>
+      </ion-row>
+
+      <ion-row class="row-bottom">
+        <ion-col size="6">
+          <div class="data-content">
+            <ion-icon name="earth-outline" color="dark"></ion-icon>
+            <ion-label class="lbl">5K+ Patients</ion-label>
+          </div>
+        </ion-col>
+        <ion-col size="6">
+          <div class="data-content">
+            <ion-icon name="calendar-outline" color="dark"></ion-icon>
+            <ion-label class="lbl">5+ Year Experience</ion-label>
+          </div>
+        </ion-col>
+      </ion-row>
+    </ion-card>
+
+    <div class="more-btn">
+      <div class="ion-activatable ripple-parent btn" (click)="onPage('audio-call')">
+        <ion-ripple-effect></ion-ripple-effect>
+        <ion-icon name="call" color="light"></ion-icon>
+      </div>
+
+      <div class="ion-activatable ripple-parent btn" (click)="onPage('chats')">
+        <ion-ripple-effect></ion-ripple-effect>
+        <ion-icon name="chatbubble-ellipses" color="light"></ion-icon>
+      </div>
+
+      <div class="ion-activatable ripple-parent btn" (click)="onPage('video-call')">
+        <ion-ripple-effect></ion-ripple-effect>
+        <ion-icon name="videocam" color="light"></ion-icon>
+      </div>
+
+      <div class="ion-activatable ripple-parent btn" (click)="onPage('reviews')">
+        <ion-ripple-effect></ion-ripple-effect>
+        <ion-icon name="barcode" color="light"></ion-icon>
+      </div>
+    </div>
+
+    <div class="detail-content">
+      <div class="prefix">
+        <ion-icon name="person-circle-outline"></ion-icon>
+        <ion-label class="lbl">Date:</ion-label>
+      </div>
+      <ion-label class="end-lbl">Thur, 22 July</ion-label>
+    </div>
+
+    <div class="detail-content">
+      <div class="prefix">
+        <ion-icon name="stopwatch-outline"></ion-icon>
+        <ion-label class="lbl">Time:</ion-label>
+      </div>
+      <ion-label class="end-lbl">Morning 10:00 AM - 11:00 AM</ion-label>
+    </div>
+
+    <div class="detail-content">
+      <div class="prefix">
+        <ion-icon name="card-outline"></ion-icon>
+        <ion-label class="lbl">Total Cost:</ion-label>
+      </div>
+      <ion-label class="end-lbl">₹85.66</ion-label>
+    </div>
+
+    <ion-label class="center-btn">
+      Patient Name <span class="blue">Dennis A. Jacobi</span> , Age 28 10:00AM and My Problem <span class="red">Skin
+        Cancer</span>
+    </ion-label>
+
+    <ion-label class="location-btn">Location : </ion-label>
+    <img src="assets/images/images/map.jpg" alt="" class="location-img">
+  </div>
+</ion-content>
+<ion-footer>
+  <ion-toolbar>
+    <ion-row>
+      <ion-col size="6">
+        <ion-button (click)="onBack()" expand="block" fill="solid" shape="round" color="primary">
+          Change
+        </ion-button>
+      </ion-col>
+      <ion-col size="6">
+        <ion-button (click)="onBack()" expand="block" fill="solid" shape="round" color="danger">
+          cancel
+        </ion-button>
+      </ion-col>
+    </ion-row>
+  </ion-toolbar>
+</ion-footer>

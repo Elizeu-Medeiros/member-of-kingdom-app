@@ -1,0 +1,60 @@
+<!--
+  Authors : initappz (Rahul Jograna)
+  Website : https://initappz.com/
+  App Name : Doctor-Appointment - 1 This App Template Source code is licensed as per the
+  terms found in the Website https://initappz.com/license
+  Copyright and Good Faith Purchasers © 2023-present initappz.
+-->
+<ion-header class="ion-no-border">
+  <ion-toolbar mode="ios">
+    <ion-title>Entrar</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <div class="login-register-screen">
+    <div class="logo-content">
+      <img src="assets/images/images/logo.png" alt="" class="img">
+      <ion-label class="title">Member of Kingdom</ion-label>
+    </div>
+
+    <div class="login-content">
+      <ion-label position="inline" class="lbl">E-mail <ion-text color="danger">*</ion-text></ion-label>
+      <ion-item lines="none" class="item-content">
+        <ion-input type="email" placeholder="Digite seu E-mail"></ion-input>
+      </ion-item>
+      <ion-label position="inline" class="lbl">Password <ion-text color="danger">*</ion-text></ion-label>
+      <ion-item lines="none" class="item-content">
+        <ion-input [type]="passwordView == false ? 'password' :'text' " placeholder="Digite sua senha"></ion-input>
+        <ion-icon slot="end" [name]="passwordView == false ?'eye-outline' :'eye-off-outline'" (click)="toggePassword()"
+          color="medium"></ion-icon>
+      </ion-item>
+      <ion-label class="reset-password" (click)="onResetPassword()">Esqueceu sua senha?</ion-label>
+
+      <ion-button expand="block" fill="solid" shape="round" class="login-btn" color="primary" (click)="onHome()">
+        Entrar
+      </ion-button>
+
+      <ion-label class="or-lbl">Ou Continue com</ion-label>
+
+      <ion-row class="social-btn">
+        <ion-col size="6">
+          <ion-button expand="block" fill="solid" shape="round" color="light" (click)="onHome()">
+            <ion-icon slot="start" name="logo-google" color="danger"></ion-icon>
+            Google
+          </ion-button>
+        </ion-col>
+        <ion-col size="6">
+          <ion-button expand="block" fill="solid" shape="round" color="light" (click)="onHome()">
+            <ion-icon slot="start" name="logo-apple" color="dark"></ion-icon>
+            Apple
+          </ion-button>
+        </ion-col>
+      </ion-row>
+
+      <ion-label class="bottom-lbl" (click)="onRegister()">
+        Não tem uma conta <span class="active">Inscreva-se</span>
+      </ion-label>
+    </div>
+  </div>
+</ion-content>

@@ -1,0 +1,36 @@
+<!--
+  Authors : initappz (Rahul Jograna)
+  Website : https://initappz.com/
+  App Name : Doctor-Appointment - 1 This App Template Source code is licensed as per the
+  terms found in the Website https://initappz.com/license
+  Copyright and Good Faith Purchasers © 2023-present initappz.
+-->
+<ion-header class="ion-no-border">
+  <ion-toolbar mode="ios">
+    <ion-title>
+      <ion-label class="call-title">Dr. Elaine D. Smith</ion-label>
+      <ion-label class="call-duration">25:33 Min</ion-label>
+    </ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="onBack()" color="dark">
+        <ion-icon slot="icon-only" name="close-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="audio-call-screen">
+    <div class="center_div-loader">
+      <div class="ripple-container">
+        <div class="thumb-lg ripple-trigger">
+          <img src="assets/images/avatar/2.jpg" style="height:100px;width: 100px" class="rounded_img b b-2x box-shadow">
+          <ion-label class="time">25:33 Min</ion-label>
+          <ion-label class="name">Dr. Elaine D. Smith</ion-label>
+        </div>
+        <div class="ripple-1"></div>
+        <div class="ripple-2"></div>
+      </div>
+    </div>
+  </div>
+</ion-content>

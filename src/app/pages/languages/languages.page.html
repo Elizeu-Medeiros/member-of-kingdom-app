@@ -1,0 +1,28 @@
+<!--
+  Authors : initappz (Rahul Jograna)
+  Website : https://initappz.com/
+  App Name : Doctor-Appointment - 1 This App Template Source code is licensed as per the
+  terms found in the Website https://initappz.com/license
+  Copyright and Good Faith Purchasers © 2023-present initappz.
+-->
+<ion-header class="ion-no-border">
+  <ion-toolbar mode="ios">
+    <ion-buttons slot="start">
+      <ion-button (click)="onBack()" color="dark">
+        <ion-icon slot="icon-only" name="arrow-back-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Languages</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <div class="languages-screen">
+    <ion-radio-group [(ngModel)]="selected">
+      <ion-item lines="none" class="item-content" *ngFor="let item of util.languagesList">
+        <ion-label class="lbl">{{item}}</ion-label>
+        <ion-radio [value]="item" slot="end" mode="ios" color="dark"></ion-radio>
+      </ion-item>
+    </ion-radio-group>
+  </div>
+</ion-content>

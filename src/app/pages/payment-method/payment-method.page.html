@@ -1,0 +1,118 @@
+<!--
+  Authors : initappz (Rahul Jograna)
+  Website : https://initappz.com/
+  App Name : Doctor-Appointment - 1 This App Template Source code is licensed as per the
+  terms found in the Website https://initappz.com/license
+  Copyright and Good Faith Purchasers © 2023-present initappz.
+-->
+<ion-header class="ion-no-border">
+  <ion-toolbar mode="ios">
+    <ion-buttons slot="start">
+      <ion-button (click)="onBack()" color="dark">
+        <ion-icon slot="icon-only" name="arrow-back-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Payment Method</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <div class="payment-method-screen">
+    <ion-card mode="ios" class="card-content">
+      <ion-row class="row-content">
+        <ion-col size="3">
+          <div class="doc-cover" [ngStyle]="{'background-image': 'url(assets/images/doctors/1.jpg)'}"></div>
+        </ion-col>
+        <ion-col size="9">
+          <div class="name-content">
+            <ion-label class="type"> Gynecological related issues </ion-label>
+            <ion-label class="name"> Dr. Jonathan A. Cave </ion-label>
+            <ion-label class="date">15 July 01:30 AM</ion-label>
+            <div class="rates">
+              <ion-icon slot="icon-only" name="star" color="warning"></ion-icon>
+              <ion-icon slot="icon-only" name="star" color="warning"></ion-icon>
+              <ion-icon slot="icon-only" name="star" color="warning"></ion-icon>
+              <ion-icon slot="icon-only" name="star" color="warning"></ion-icon>
+              <ion-icon slot="icon-only" name="star-outline" color="dark"></ion-icon>
+              <ion-label class="lbl">(528)</ion-label>
+            </div>
+          </div>
+        </ion-col>
+      </ion-row>
+
+      <ion-row class="row-bottom">
+        <ion-col size="6">
+          <div class="data-content">
+            <ion-icon name="earth-outline" color="dark"></ion-icon>
+            <ion-label class="lbl">5K+ Patients</ion-label>
+          </div>
+        </ion-col>
+        <ion-col size="6">
+          <div class="data-content">
+            <ion-icon name="calendar-outline" color="dark"></ion-icon>
+            <ion-label class="lbl">5+ Year Experience</ion-label>
+          </div>
+        </ion-col>
+      </ion-row>
+    </ion-card>
+    <ion-button expand="block" fill="solid" shape="round" color="light" (click)="addNewCard()">
+      <ion-icon slot="start" name="add" color="dark"></ion-icon>
+      Add New Card
+    </ion-button>
+    <ion-radio-group [(ngModel)]="selected">
+      <ion-item lines="none" class="item-content"
+        [ngStyle]="{'--background': selected == 'paypal' ? '#EFF4F8' : null }">
+        <ion-thumbnail slot="start">
+          <img src="assets/images/payments/paypal.png" />
+        </ion-thumbnail>
+        <ion-label class="lbl">PayPal</ion-label>
+        <ion-radio value="paypal" slot="end" mode="md" color="dark"></ion-radio>
+      </ion-item>
+      <ion-item lines="none" class="item-content" [ngStyle]="{'--background': selected == 'visa' ? '#EFF4F8' : null }">
+        <ion-thumbnail slot="start">
+          <img src="assets/images/payments/visa.png" />
+        </ion-thumbnail>
+        <ion-label class="lbl">Visa Card</ion-label>
+        <ion-radio value="visa" slot="end" mode="md" color="dark"></ion-radio>
+      </ion-item>
+      <ion-item lines="none" class="item-content" [ngStyle]="{'--background': selected == 'paytm' ? '#EFF4F8' : null }">
+        <ion-thumbnail slot="start">
+          <img src="assets/images/payments/paytm.png" />
+        </ion-thumbnail>
+        <ion-label class="lbl">PayTM</ion-label>
+        <ion-radio value="paytm" slot="end" mode="md" color="dark"></ion-radio>
+      </ion-item>
+      <ion-item lines="none" class="item-content" [ngStyle]="{'--background': selected == 'cash' ? '#EFF4F8' : null }">
+        <ion-thumbnail slot="start">
+          <img src="assets/images/payments/dollar.png" />
+        </ion-thumbnail>
+        <ion-label class="lbl">Cash on Shop</ion-label>
+        <ion-radio value="cash" slot="end" mode="md" color="dark"></ion-radio>
+      </ion-item>
+    </ion-radio-group>
+
+    <div class="payment-overview-content">
+      <div class="flex-content">
+        <ion-label class="lbl">Doctor Fees:</ion-label>
+        <ion-label class="price">₹15.22</ion-label>
+      </div>
+      <div class="flex-content">
+        <ion-label class="lbl">Total Cost:</ion-label>
+        <ion-label class="price">₹45.85</ion-label>
+      </div>
+      <div class="flex-content">
+        <ion-label class="lbl">Total Discount:</ion-label>
+        <ion-label class="price">-₹17.22</ion-label>
+      </div>
+      <div class="break"></div>
+      <div class="flex-content">
+        <ion-label class="lbl">Total Payment:</ion-label>
+        <ion-label class="price">₹355.22</ion-label>
+      </div>
+
+      <ion-button expand="block" fill="solid" shape="round" color="light" (click)="makePayment()">
+        Payment Now
+      </ion-button>
+    </div>
+  </div>
+</ion-content>

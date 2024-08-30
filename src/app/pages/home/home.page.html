@@ -1,0 +1,96 @@
+<!--
+  Authors : initappz (Rahul Jograna)
+  Website : https://initappz.com/
+  App Name : Doctor-Appointment - 1 This App Template Source code is licensed as per the
+  terms found in the Website https://initappz.com/license
+  Copyright and Good Faith Purchasers © 2023-present initappz.
+-->
+<ion-header class="ion-no-border">
+  <ion-toolbar mode="md" color="light">
+    <ion-buttons slot="start">
+      <ion-avatar slot="start" class="toolbar-image">
+        <img src="assets/images/avatar/2.jpg" />
+      </ion-avatar>
+    </ion-buttons>
+    <ion-title>
+      <ion-label class="home-title">Hi, John Cannery</ion-label>
+      <ion-label class="home-sub-title">How is your health?</ion-label>
+    </ion-title>
+    <ion-buttons slot="end">
+      <ion-button color="dark">
+        <ion-icon slot="icon-only" src="assets/icon/bell.svg"></ion-icon>
+      </ion-button>
+      <ion-button color="dark" (click)="onSearch()">
+        <ion-icon slot="icon-only" src="assets/icon/search.svg"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+  <ion-toolbar mode="md" color="light">
+    <ion-title>
+      <ion-label class="home-toolbar-lbl">Find Your Desired <span class="active">Doctor Right Now.!</span> </ion-label>
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <div class="home-screen">
+    <div class="main-title">
+      <ion-label class="title">Upcoming Schedule</ion-label>
+      <ion-label class="sub-title">See All</ion-label>
+    </div>
+
+    <swiper-container #swiper slides-per-view="1" space-between="10">
+      <swiper-slide *ngFor="let item of util.homeSlider;">
+        <div class="home-slider-cover" [ngStyle]="{'background-image': 'url('+item.image+')'}">
+          <ion-label class="name"> {{item.name}} </ion-label>
+          <ion-label class="city"> {{item.type}} </ion-label>
+          <ion-label class="date"> {{item.date}} </ion-label>
+        </div>
+      </swiper-slide>
+    </swiper-container>
+
+    <div class="main-title">
+      <ion-label class="title">Categories</ion-label>
+      <ion-label class="sub-title" (click)="onCategories()">See All</ion-label>
+    </div>
+
+    <swiper-container #swiper slides-per-view="4" space-between="10">
+      <swiper-slide *ngFor="let item of util.diseasesList;">
+        <div class="ion-activatable ripple-parent categories-info" (click)="onDoctorList()">
+          <ion-ripple-effect></ion-ripple-effect>
+          <img [src]="item.image" alt="" class="img">
+          <ion-label class="name">
+            {{ (item.name.length>10)? (item.name | slice:0:10)+'..':(item.name)}}
+          </ion-label>
+        </div>
+      </swiper-slide>
+    </swiper-container>
+
+    <div class="main-title">
+      <ion-label class="title">Top Doctors</ion-label>
+      <ion-label class="sub-title">See All</ion-label>
+    </div>
+
+    <div class="doc-list">
+      <ion-row class="ion-activatable ripple-parent docs-items" *ngFor="let item of util.doctorsList;let i = index;"
+        (click)="onDoctorInfo(item.name)">
+        <ion-ripple-effect></ion-ripple-effect>
+        <ion-col size="3">
+          <div class="doc-cover" [ngStyle]="{'background-image': 'url('+item.image+')'}"></div>
+        </ion-col>
+        <ion-col size="9">
+          <ion-label class="name"> {{item.name}} </ion-label>
+          <ion-label class="type"> {{item.cate_name}} </ion-label>
+          <div class="rates">
+            <ion-icon slot="icon-only" name="star" color="warning"></ion-icon>
+            <ion-icon slot="icon-only" name="star" color="warning"></ion-icon>
+            <ion-icon slot="icon-only" name="star" color="warning"></ion-icon>
+            <ion-icon slot="icon-only" name="star" color="warning"></ion-icon>
+            <ion-icon slot="icon-only" name="star-outline" color="dark"></ion-icon>
+            <ion-label class="lbl">(52{{i+1}})</ion-label>
+          </div>
+        </ion-col>
+      </ion-row>
+    </div>
+  </div>
+</ion-content>

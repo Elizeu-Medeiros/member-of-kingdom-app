@@ -1,0 +1,42 @@
+<!--
+  Authors : initappz (Rahul Jograna)
+  Website : https://initappz.com/
+  App Name : Doctor-Appointment - 1 This App Template Source code is licensed as per the
+  terms found in the Website https://initappz.com/license
+  Copyright and Good Faith Purchasers © 2023-present initappz.
+-->
+<ion-header class="ion-no-border">
+  <ion-toolbar mode="ios">
+    <ion-buttons slot="end">
+      <ion-button color="dark">
+        Skip
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <div class="welcome-screen">
+    <swiper-container #swiper (slidechange)="changed()">
+      <swiper-slide *ngFor="let item of util.welcomeSlider;">
+        <div class="info-slider">
+          <img [src]="item.image" alt="" class="img">
+          <div class="box-content">
+            <ion-label class="title"> {{item.title}} </ion-label>
+            <ion-label class="sub-title"> {{item.sub}} </ion-label>
+
+            <div class="dots">
+              <div [ngClass]="activeIndex == 0 ? 'active':'deactive'"></div>
+              <div [ngClass]="activeIndex == 1 ? 'active':'deactive'"></div>
+              <div [ngClass]="activeIndex == 2 ? 'active':'deactive'"></div>
+            </div>
+
+            <ion-button expand="block" fill="solid" shape="round" color="light" (click)="onAuth()">
+              Get Started
+            </ion-button>
+          </div>
+        </div>
+      </swiper-slide>
+    </swiper-container>
+  </div>
+</ion-content>

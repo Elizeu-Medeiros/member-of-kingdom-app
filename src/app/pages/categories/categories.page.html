@@ -1,0 +1,42 @@
+<!--
+  Authors : initappz (Rahul Jograna)
+  Website : https://initappz.com/
+  App Name : Doctor-Appointment - 1 This App Template Source code is licensed as per the
+  terms found in the Website https://initappz.com/license
+  Copyright and Good Faith Purchasers © 2023-present initappz.
+-->
+<ion-header class="ion-no-border">
+  <ion-toolbar mode="ios">
+    <ion-buttons slot="start">
+      <ion-button (click)="onBack()" color="dark">
+        <ion-icon slot="icon-only" name="arrow-back-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Categories</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <div class="categories-screen">
+    <ion-label class="title">What do you want to Consult?</ion-label>
+    <ion-label class="sub-title">You Can Choose more than One </ion-label>
+    <ion-row class="categories-row">
+      <ion-col size="4" *ngFor="let item of util.diseasesList;">
+        <div class="ion-activatable ripple-parent categories-content" (click)="onSave(item.name)">
+          <ion-icon name="checkmark-circle" *ngIf="savedList.includes(item.name)" class="saved-icon"
+            color="success"></ion-icon>
+          <ion-ripple-effect></ion-ripple-effect>
+          <img [src]="item.image" alt="" class="img">
+          <ion-label class="lbl">
+            {{ (item.name.length>10)? (item.name | slice:0:10)+'..':(item.name)}}
+          </ion-label>
+        </div>
+      </ion-col>
+    </ion-row>
+  </div>
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed" *ngIf="savedList.length > 0">
+    <ion-fab-button (click)="onDoctorList()">
+      <ion-icon name="checkmark-circle-outline"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+</ion-content>

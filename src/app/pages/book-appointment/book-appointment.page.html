@@ -1,0 +1,158 @@
+<!--
+  Authors : initappz (Rahul Jograna)
+  Website : https://initappz.com/
+  App Name : Doctor-Appointment - 1 This App Template Source code is licensed as per the
+  terms found in the Website https://initappz.com/license
+  Copyright and Good Faith Purchasers © 2023-present initappz.
+-->
+<ion-header class="ion-no-border">
+  <ion-toolbar mode="ios">
+    <ion-buttons slot="start">
+      <ion-button (click)="onBack()" color="dark">
+        <ion-icon slot="icon-only" name="arrow-back-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Appointment</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <div class="book-appointment-screen">
+    <ion-label class="main-title">Schedule:</ion-label>
+    <div class="calender">
+      <swiper-container #slideDate>
+        <swiper-slide>
+          <ion-row class="row_cal">
+            <ion-col size="0.75" (click)="previousWeek()">
+              <ion-icon name="arrow-back-outline" mode="md" class="icon_change center_item" *ngIf="currentWeek != 0">
+              </ion-icon>
+            </ion-col>
+            <ion-col *ngFor="let day of days" [class.disabled]="initDate.split('T')[0] > day.val.split('T')" size="1.5"
+              (click)="selectDate(day)">
+              <ion-label class="lbl_day" [class.selectedDay]="day.val.split('T')[0] == selectedDate">{{
+                day.day }}
+              </ion-label>
+              <ion-label class="lbl_date" [class.selectedDate]="day.val.split('T')[0] == selectedDate">{{
+                day.date }}
+              </ion-label>
+
+            </ion-col>
+            <ion-col size="0.75" (click)="nextWeek()">
+              <ion-icon name="arrow-forward-outline" mode="md" class="icon_change center_item"></ion-icon>
+            </ion-col>
+          </ion-row>
+        </swiper-slide>
+      </swiper-container>
+    </div>
+
+    <ion-row class="segment-btn">
+      <ion-col size="6">
+        <div
+          [class]="currentSegment == 'morning' ? 'ion-activatable ripple-parent active':'ion-activatable ripple-parent deactive'"
+          (click)="changeSegment('morning')">
+          <ion-ripple-effect></ion-ripple-effect>
+          <ion-icon name="sunny-outline" [color]="currentSegment == 'morning' ? 'light' :'danger'"></ion-icon>
+          <ion-label class="lbl">Morning</ion-label>
+        </div>
+      </ion-col>
+      <ion-col size="6">
+        <div
+          [class]="currentSegment == 'evening' ? 'ion-activatable ripple-parent active':'ion-activatable ripple-parent deactive'"
+          (click)="changeSegment('evening')">
+          <ion-ripple-effect></ion-ripple-effect>
+          <ion-icon name="cloudy-night-outline" [color]="currentSegment == 'evening' ? 'light' :'danger'"></ion-icon>
+          <ion-label class="lbl">Evening</ion-label>
+        </div>
+      </ion-col>
+    </ion-row>
+
+    <ion-row class="timeslot">
+      <ion-col size="3" *ngFor="let item of time;">
+        <div [class]="selectedSlot == item ? 'active-slot' : 'deactive-slot'" (click)="selectSlot(item)">
+          <ion-label class="lbl">{{item}}</ion-label>
+        </div>
+      </ion-col>
+    </ion-row>
+
+    <ion-label class="main-title">Fees Information:</ion-label>
+
+    <ion-row class="row-item-content">
+      <ion-col size="2">
+        <div class="prefix">
+          <ion-icon name="call" color="light"></ion-icon>
+        </div>
+      </ion-col>
+      <ion-col size="8">
+        <ion-label class="title">Voice Call</ion-label>
+        <ion-label class="sub-title">Can Make a Voice Call with Doctor</ion-label>
+      </ion-col>
+      <ion-col size="2">
+        <ion-label class="price">₹10</ion-label>
+      </ion-col>
+    </ion-row>
+
+    <ion-row class="row-item-content">
+      <ion-col size="2">
+        <div class="prefix">
+          <ion-icon name="chatbubble-ellipses" color="light"></ion-icon>
+        </div>
+      </ion-col>
+      <ion-col size="8">
+        <ion-label class="title">Messaging</ion-label>
+        <ion-label class="sub-title">Can Messaging with Doctor</ion-label>
+      </ion-col>
+      <ion-col size="2">
+        <ion-label class="price">₹8</ion-label>
+      </ion-col>
+    </ion-row>
+
+    <ion-row class="row-item-content">
+      <ion-col size="2">
+        <div class="prefix">
+          <ion-icon name="videocam" color="light"></ion-icon>
+        </div>
+      </ion-col>
+      <ion-col size="8">
+        <ion-label class="title">Video Call</ion-label>
+        <ion-label class="sub-title">Can Make a Video Call with Doctor</ion-label>
+      </ion-col>
+      <ion-col size="2">
+        <ion-label class="price">₹18</ion-label>
+      </ion-col>
+    </ion-row>
+
+    <ion-label class="main-title">Patient Details:</ion-label>
+    <ion-label position="inline" class="form-lbl">Full Name <ion-text color="danger">*</ion-text></ion-label>
+    <ion-item lines="none" class="item-content">
+      <ion-input type="text" placeholder="Enter Your Name"></ion-input>
+    </ion-item>
+
+    <ion-label position="inline" class="form-lbl">Age <ion-text color="danger">*</ion-text></ion-label>
+    <ion-item lines="none" class="item-content">
+      <ion-select value="peperoni" placeholder="Select Age">
+        <ion-select-option value="peperoni">25 - 30</ion-select-option>
+        <ion-select-option value="hawaii">30 - 40</ion-select-option>
+      </ion-select>
+    </ion-item>
+
+    <ion-label position="inline" class="form-lbl">Gender <ion-text color="danger">*</ion-text></ion-label>
+    <ion-item lines="none" class="item-content">
+      <ion-select value="peperoni" placeholder="Select Gender">
+        <ion-select-option value="peperoni">Male</ion-select-option>
+        <ion-select-option value="hawaii">Female</ion-select-option>
+      </ion-select>
+    </ion-item>
+
+    <ion-label position="inline" class="form-lbl">Write Your Problem <ion-text color="danger">*</ion-text></ion-label>
+    <ion-item lines="none" class="item-content">
+      <ion-textarea placeholder="Write Your Problem" [rows]="5"></ion-textarea>
+    </ion-item>
+  </div>
+</ion-content>
+<ion-footer>
+  <ion-toolbar>
+    <ion-button expand="block" fill="solid" shape="round" color="primary" (click)="onPayment()">
+      Book Appointment
+    </ion-button>
+  </ion-toolbar>
+</ion-footer>

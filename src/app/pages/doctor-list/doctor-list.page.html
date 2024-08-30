@@ -1,0 +1,41 @@
+<!--
+  Authors : initappz (Rahul Jograna)
+  Website : https://initappz.com/
+  App Name : Doctor-Appointment - 1 This App Template Source code is licensed as per the
+  terms found in the Website https://initappz.com/license
+  Copyright and Good Faith Purchasers © 2023-present initappz.
+-->
+<ion-header class="ion-no-border">
+  <ion-toolbar mode="ios">
+    <ion-buttons slot="start">
+      <ion-button (click)="onBack()" color="dark">
+        <ion-icon slot="icon-only" name="arrow-back-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Doctor List</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <div class="doc-list">
+    <ion-row class="ion-activatable ripple-parent docs-items" *ngFor="let item of util.doctorsList;let i = index;"
+      (click)="onDoctorInfo(item.name)">
+      <ion-ripple-effect></ion-ripple-effect>
+      <ion-col size="3">
+        <div class="doc-cover" [ngStyle]="{'background-image': 'url('+item.image+')'}"></div>
+      </ion-col>
+      <ion-col size="9">
+        <ion-label class="name"> {{item.name}} </ion-label>
+        <ion-label class="type"> {{item.cate_name}} </ion-label>
+        <div class="rates">
+          <ion-icon slot="icon-only" name="star" color="warning"></ion-icon>
+          <ion-icon slot="icon-only" name="star" color="warning"></ion-icon>
+          <ion-icon slot="icon-only" name="star" color="warning"></ion-icon>
+          <ion-icon slot="icon-only" name="star" color="warning"></ion-icon>
+          <ion-icon slot="icon-only" name="star-outline" color="dark"></ion-icon>
+          <ion-label class="lbl">(52{{i+1}})</ion-label>
+        </div>
+      </ion-col>
+    </ion-row>
+  </div>
+</ion-content>

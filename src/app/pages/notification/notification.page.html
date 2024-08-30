@@ -1,0 +1,117 @@
+<!--
+  Authors : initappz (Rahul Jograna)
+  Website : https://initappz.com/
+  App Name : Doctor-Appointment - 1 This App Template Source code is licensed as per the
+  terms found in the Website https://initappz.com/license
+  Copyright and Good Faith Purchasers © 2023-present initappz.
+-->
+<ion-header class="ion-no-border">
+  <ion-toolbar mode="ios">
+    <ion-buttons slot="start">
+      <ion-button (click)="onBack()" color="dark">
+        <ion-icon slot="icon-only" name="arrow-back-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Notification</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <div class="notification-screen">
+    <ion-label class="main-title">Today July 14:</ion-label>
+    <ion-card mode="ios" class="ion-activatable ripple-parent card-content">
+      <ion-ripple-effect></ion-ripple-effect>
+      <ion-row class="row-content">
+        <ion-col size="2">
+          <div class="circle-content" [style.background-color]="'#FC4B6F'">
+            <ion-icon name="alarm-outline" color="light"></ion-icon>
+          </div>
+        </ion-col>
+        <ion-col size="10">
+          <div class="name-content">
+            <ion-label class="date">10:00 AM</ion-label>
+            <ion-label class="title">Reminder for Alarm</ion-label>
+            <ion-label class="sub-title">Your Reminder Appointment will be Start After 15 Minutes, Stay with
+              App</ion-label>
+          </div>
+        </ion-col>
+      </ion-row>
+    </ion-card>
+
+    <ion-card mode="ios" class="ion-activatable ripple-parent card-content">
+      <ion-ripple-effect></ion-ripple-effect>
+      <ion-row class="row-content">
+        <ion-col size="2">
+          <div class="circle-content" [style.background-color]="'#FAC213'">
+            <ion-icon name="checkmark-circle-outline" color="light"></ion-icon>
+          </div>
+        </ion-col>
+        <ion-col size="10">
+          <div class="name-content">
+            <ion-label class="date">10:00 AM</ion-label>
+            <ion-label class="title">Reminder for Appointment</ion-label>
+            <ion-label class="sub-title">Your Reminder Appointment will be Notification Send.</ion-label>
+          </div>
+        </ion-col>
+      </ion-row>
+    </ion-card>
+
+    <ion-card mode="ios" class="ion-activatable ripple-parent card-content">
+      <ion-ripple-effect></ion-ripple-effect>
+      <ion-row class="row-content">
+        <ion-col size="2">
+          <div class="circle-content" [style.background-color]="'#4E944F'">
+            <ion-icon name="checkmark-circle-outline" color="light"></ion-icon>
+          </div>
+        </ion-col>
+        <ion-col size="10">
+          <div class="name-content">
+            <ion-label class="date">10:00 AM</ion-label>
+            <ion-label class="title">Appointment Confirmed</ion-label>
+            <ion-label class="sub-title">Your Appointment Confirmed. <span class="active">Dr. Jaime M. Mercado</span>
+              Call will be Held at 10:30 AM - 24 Dec</ion-label>
+          </div>
+        </ion-col>
+      </ion-row>
+    </ion-card>
+
+    <ion-label class="main-title">Yesterday July 15:</ion-label>
+
+    <ion-card mode="ios" class="ion-activatable ripple-parent card-content">
+      <ion-ripple-effect></ion-ripple-effect>
+      <ion-row class="row-content">
+        <ion-col size="2">
+          <div class="circle-content" [style.background-color]="'#4E944F'">
+            <ion-icon name="checkmark-circle-outline" color="light"></ion-icon>
+          </div>
+        </ion-col>
+        <ion-col size="10">
+          <div class="name-content">
+            <ion-label class="date">10:00 AM</ion-label>
+            <ion-label class="title">Reminder for Today</ion-label>
+            <ion-label class="sub-title">Your Reminder Appointment will be Start After 15 Minutes, Stay with
+              App</ion-label>
+          </div>
+        </ion-col>
+      </ion-row>
+    </ion-card>
+
+    <ion-card mode="ios" class="ion-activatable ripple-parent card-content">
+      <ion-ripple-effect></ion-ripple-effect>
+      <ion-row class="row-content">
+        <ion-col size="2">
+          <div class="circle-content" [style.background-color]="'#FC4B6F'">
+            <ion-icon name="alarm-outline" color="light"></ion-icon>
+          </div>
+        </ion-col>
+        <ion-col size="10">
+          <div class="name-content">
+            <ion-label class="date">10:00 AM</ion-label>
+            <ion-label class="title">New Features Available</ion-label>
+            <ion-label class="sub-title">Your Reminder enim timid itas non e vocabulis okun nascitur.</ion-label>
+          </div>
+        </ion-col>
+      </ion-row>
+    </ion-card>
+  </div>
+</ion-content>
