@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { Observable, tap } from 'rxjs';
+import { Observable, of, tap } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { TokenService } from './token.service';
 
@@ -33,7 +33,7 @@ export class AuthService {
     return this.http.post<any>(`${this.apiUrl}/login`, { email, password }).pipe(
       tap(response => {
         // Salva o token e os dados do usuário no local storage
-        this.tokenService.setToken(response.token);
+        this.tokenService.setToken(response.access_token);
         this.tokenService.setUser(response.user);
       })
     );
@@ -45,15 +45,22 @@ export class AuthService {
   }
 
   // Sign out
-  signOut() {
+  signOut(): Observable<any> {
     const token = this.tokenService.getToken();
     if (token) {
       return this.http.post<any>(`${this.apiUrl}/logout`, {}, {
         headers: { Authorization: `Bearer ${token}` }
-      }).subscribe(() => {
-        this.tokenService.clearToken();
-      });
+      }).pipe(
+        tap(() => this.tokenService.signOut()) // Executa ação adicional quando a resposta for recebida
+      );
     }
+    // Retorna um Observable vazio caso não haja token
+    return of(null);
+  }
+
+  isAuthenticated(): boolean {
+    const token = this.tokenService.getToken();
+    return !!token; // Retorna verdadeiro se o token existir
   }
 
 }

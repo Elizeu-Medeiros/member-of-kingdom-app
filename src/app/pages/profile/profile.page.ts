@@ -1,3 +1,5 @@
+import { Observable } from 'rxjs';
+import { AuthService } from './../../services/auth.service';
 import { TokenService } from './../../services/token.service';
 
 import { Component, OnInit } from '@angular/core';
@@ -14,6 +16,7 @@ export class ProfilePage implements OnInit {
   constructor(
     public util: UtilService,
     private tokenService: TokenService,
+    private authService: AuthService,
   ) { }
 
   ngOnInit() {
@@ -24,4 +27,17 @@ export class ProfilePage implements OnInit {
     this.util.navigateToPage(name);
   }
 
+  // Método para fazer logout
+  onSignOut(): void {
+    const logout$: Observable<any> = this.authService.signOut();
+
+    logout$.subscribe({
+      next: () => {
+        this.onPage('/login'); // Redireciona para a página de login
+      },
+      error: (err) => {
+        console.error('Erro ao tentar fazer logout', err); // Tratamento de erro
+      }
+    });
+  }
 }
