@@ -1,10 +1,4 @@
-<!--
-  Authors : initappz (Rahul Jograna)
-  Website : https://initappz.com/
-  App Name : Doctor-Appointment - 1 This App Template Source code is licensed as per the
-  terms found in the Website https://initappz.com/license
-  Copyright and Good Faith Purchasers © 2023-present initappz.
--->
+
 <ion-tabs (ionTabsDidChange)="change($event)">
   <ion-tab-bar slot="bottom">
     <ion-tab-button tab="home">
@@ -19,10 +13,10 @@
       <ion-label>Doctors</ion-label>
     </ion-tab-button>
 
-    <ion-tab-button tab="appointments">
+    <ion-tab-button tab="pessoas">
       <ion-icon aria-hidden="true"
-        [src]="active == 'appointments' ? 'assets/images/tabs/calendar_active.svg':'assets/images/tabs/calendar.svg' "></ion-icon>
-      <ion-label>Appointments</ion-label>
+        [src]="active == 'pessoas' ? 'assets/images/tabs/calendar_active.svg':'assets/images/tabs/calendar.svg' "></ion-icon>
+      <ion-label>Pessoas</ion-label>
     </ion-tab-button>
 
     <ion-tab-button tab="profile">

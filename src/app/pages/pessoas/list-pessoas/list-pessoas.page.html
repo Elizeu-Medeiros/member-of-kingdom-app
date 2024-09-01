@@ -1,19 +1,24 @@
-
 <ion-header class="ion-no-border">
-  <ion-toolbar mode="ios">
-    <ion-buttons slot="start">
-      <ion-button (click)="onBack()" color="dark">
-        <ion-icon slot="icon-only" name="arrow-back-outline"></ion-icon>
-      </ion-button>
-    </ion-buttons>
-    <ion-title>Favourite</ion-title>
+  <ion-toolbar mode="ios" color="light">
+    <ion-title>Doctor List</ion-title>
+  </ion-toolbar>
+  <ion-toolbar mode="ios" color="light">
+    <ion-searchbar placeholder="Doctor Name, Categories" inputmode="text" type="text" mode="ios"></ion-searchbar>
+  </ion-toolbar>
+  <ion-toolbar mode="ios" color="light">
+    <ion-segment [(ngModel)]="selected" mode="md" scrollable="true" color="primary">
+      <ion-segment-button value="all">
+        <ion-label>All</ion-label>
+      </ion-segment-button>
+      <ion-segment-button [value]="item.name" *ngFor="let item of util.diseasesList;">
+        <ion-label>{{item.name}}</ion-label>
+      </ion-segment-button>
+    </ion-segment>
   </ion-toolbar>
 </ion-header>
-
 <ion-content class="ion-padding">
   <div class="doc-list">
-    <ion-row class="ion-activatable ripple-parent docs-items" *ngFor="let item of util.doctorsList;let i = index;"
-      (click)="onDoctorInfo(item.name)">
+    <ion-row class="ion-activatable ripple-parent docs-items" *ngFor="let item of util.doctorsList;let i = index;" (click)="onDoctorInfo(item.name)">
       <ion-ripple-effect></ion-ripple-effect>
       <ion-col size="3">
         <div class="doc-cover" [ngStyle]="{'background-image': 'url('+item.image+')'}"></div>

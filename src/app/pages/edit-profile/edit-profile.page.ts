@@ -1,7 +1,7 @@
 import { TokenService } from './../../services/token.service';
 
 import { Component, OnInit } from '@angular/core';
-import { User } from 'src/app/model/user.model';
+import { User } from 'src/app/models/user.model';
 import { UtilService } from 'src/app/services/util.service';
 
 @Component({

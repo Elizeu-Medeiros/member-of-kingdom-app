@@ -63,4 +63,12 @@ export class AuthService {
     return !!token; // Retorna verdadeiro se o token existir
   }
 
+  sendResetLink(email: string): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/password/email`, { email });
+  }
+
+  resetPassword(email: string, password: string, token: string): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/password/reset`, { email, password, token });
+  }
+
 }

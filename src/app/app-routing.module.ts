@@ -100,7 +100,10 @@ const routes: Routes = [
     path: 'payment-method',
     loadChildren: () => import('./pages/payment-method/payment-method.module').then(m => m.PaymentMethodPageModule)
   },
-
+  {
+    path: 'pessoas',
+    loadChildren: () => import('./pages/pessoas/list-pessoas/list-pessoas.module').then(m => m.ListPessoasPageModule)
+  },
   {
     path: 'register',
     loadChildren: () => import('./pages/register/register.module').then(m => m.RegisterPageModule)

@@ -1,8 +1,9 @@
-export interface User {
+export interface Pessoa {
   data_aniversario: string,
-  name?: string,
+  nome?: string,
   email?: string,
-  sexo?: 'm' | 'f'
+  sexo?: 'm' | 'f',
+  password?: string
   // Outros campos conforme necessário
 }
 

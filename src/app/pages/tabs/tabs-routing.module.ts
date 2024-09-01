@@ -1,3 +1,4 @@
+import { ListPessoasPage } from './../pessoas/list-pessoas/list-pessoas.page';
 
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
@@ -34,12 +35,13 @@ const routes: Routes = [
         loadChildren: () =>
           import('../doctors/doctors.module').then((m) => m.DoctorsPageModule),
       },
+
       {
-        path: 'appointments',
+        path: 'pessoas',
         children: [
           {
             path: '',
-            loadChildren: () => import('../appointments/appointments.module').then(m => m.AppointmentsPageModule)
+            loadChildren: () => import('../pessoas/list-pessoas/list-pessoas.module').then(m => m.ListPessoasPageModule)
           },
           {
             path: 'appointment-details',
