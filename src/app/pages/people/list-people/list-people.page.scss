@@ -1,0 +1,24 @@
+.person-photo {
+  width: 50px; /* Ajuste o tamanho conforme necessário */
+  height: 50px; /* Ajuste o tamanho conforme necessário */
+  background-size: cover; /* Faz com que a imagem cubra todo o elemento */
+  background-position: center; /* Centraliza a imagem */
+  border-radius: 50%; /* Torna a imagem circular */
+}
+
+.status {
+  display: flex;
+  justify-content: center; /* Centraliza o conteúdo horizontalmente */
+  align-items: center; /* Centraliza o conteúdo verticalmente */
+  text-align: center; /* Centraliza o texto dentro do ion-label */
+  width: 100%; /* Garante que o status ocupe toda a largura do container */
+}
+
+.green {
+  color: green;
+}
+
+.yellow {
+  color: yellow;
+}
+

@@ -1,4 +1,4 @@
-import { ListPessoasPage } from './../pessoas/list-pessoas/list-pessoas.page';
+import { ListPeoplePage } from '../people/list-people/list-people.page';
 
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
@@ -41,7 +41,21 @@ const routes: Routes = [
         children: [
           {
             path: '',
-            loadChildren: () => import('../pessoas/list-pessoas/list-pessoas.module').then(m => m.ListPessoasPageModule)
+            loadChildren: () => import('../people/list-people/list-people.module').then(m => m.ListPeoplePageModule)
+          },
+          {
+            path: 'appointment-details',
+            loadChildren: () => import('../appointment-details/appointment-details.module').then(m => m.AppointmentDetailsPageModule)
+          },
+        ]
+      },
+
+      {
+        path: 'appointments',
+        children: [
+          {
+            path: '',
+            loadChildren: () => import('../appointments/appointments.module').then(m => m.AppointmentsPageModule)
           },
           {
             path: 'appointment-details',
