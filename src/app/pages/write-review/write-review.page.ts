@@ -1,5 +1,5 @@
 
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Renderer2 } from '@angular/core';
 import { UtilService } from 'src/app/services/util.service';
 
 @Component({
@@ -11,10 +11,14 @@ export class WriteReviewPage implements OnInit {
 
   star: any = 2;
   constructor(
-    public util: UtilService
+    public util: UtilService,
+    private renderer: Renderer2
   ) { }
 
-  ngOnInit() {
+  ngOnInit(): void {
+    if (typeof document !== 'undefined') {
+      this.renderer.setAttribute(document.documentElement, 'lang', 'en');
+    }
   }
 
   onBack() {
@@ -24,5 +28,6 @@ export class WriteReviewPage implements OnInit {
   changeStar(num: any) {
     this.star = num;
   }
+
 
 }
