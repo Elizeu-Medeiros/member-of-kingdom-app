@@ -1,10 +1,5 @@
-/*
-  Authors : initappz (Rahul Jograna)
-  Website : https://initappz.com/
-  App Name : Doctor-Appointment - 1 This App Template Source code is licensed as per the
-  terms found in the Website https://initappz.com/license
-  Copyright and Good Faith Purchasers © 2023-present initappz.
-*/
+import { TokenService } from './../../services/token.service';
+
 import { Component, OnInit } from '@angular/core';
 import { UtilService } from 'src/app/services/util.service';
 import { NavigationExtras } from '@angular/router';
@@ -28,11 +23,17 @@ export class HomePage implements OnInit {
     slidesPerView: 4,
     spaceBetween: 10,
   };
+
+  user: any;
+
   constructor(
-    public util: UtilService
+    public util: UtilService,
+    private tokenService: TokenService,
   ) { }
 
   ngOnInit() {
+    // Obtém os dados do usuário do localStorage usando TokenService
+    this.user = this.tokenService.getUser();
   }
 
   onCategories() {

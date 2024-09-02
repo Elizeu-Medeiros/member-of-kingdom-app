@@ -1,10 +1,5 @@
-/*
-  Authors : initappz (Rahul Jograna)
-  Website : https://initappz.com/
-  App Name : Doctor-Appointment - 1 This App Template Source code is licensed as per the
-  terms found in the Website https://initappz.com/license
-  Copyright and Good Faith Purchasers © 2023-present initappz.
-*/
+import { ListPeoplePage } from '../people/list-people/list-people.page';
+
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { TabsPage } from './tabs.page';
@@ -40,6 +35,21 @@ const routes: Routes = [
         loadChildren: () =>
           import('../doctors/doctors.module').then((m) => m.DoctorsPageModule),
       },
+
+      {
+        path: 'pessoas',
+        children: [
+          {
+            path: '',
+            loadChildren: () => import('../people/list-people/list-people.module').then(m => m.ListPeoplePageModule)
+          },
+          {
+            path: 'appointment-details',
+            loadChildren: () => import('../appointment-details/appointment-details.module').then(m => m.AppointmentDetailsPageModule)
+          },
+        ]
+      },
+
       {
         path: 'appointments',
         children: [

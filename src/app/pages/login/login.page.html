@@ -1,10 +1,3 @@
-<!--
-  Authors : initappz (Rahul Jograna)
-  Website : https://initappz.com/
-  App Name : Doctor-Appointment - 1 This App Template Source code is licensed as per the
-  terms found in the Website https://initappz.com/license
-  Copyright and Good Faith Purchasers © 2023-present initappz.
--->
 <ion-header class="ion-no-border">
   <ion-toolbar mode="ios">
     <ion-title>Entrar</ion-title>
@@ -19,21 +12,32 @@
     </div>
 
     <div class="login-content">
-      <ion-label position="inline" class="lbl">E-mail <ion-text color="danger">*</ion-text></ion-label>
-      <ion-item lines="none" class="item-content">
-        <ion-input type="email" placeholder="Digite seu E-mail"></ion-input>
-      </ion-item>
-      <ion-label position="inline" class="lbl">Password <ion-text color="danger">*</ion-text></ion-label>
-      <ion-item lines="none" class="item-content">
-        <ion-input [type]="passwordView == false ? 'password' :'text' " placeholder="Digite sua senha"></ion-input>
-        <ion-icon slot="end" [name]="passwordView == false ?'eye-outline' :'eye-off-outline'" (click)="toggePassword()"
-          color="medium"></ion-icon>
-      </ion-item>
-      <ion-label class="reset-password" (click)="onResetPassword()">Esqueceu sua senha?</ion-label>
+      <!-- Formulário de Login -->
+      <form [formGroup]="signinForm" (ngSubmit)="signIn()">
+        <!-- Campo de E-mail -->
+        <ion-label position="inline" class="lbl">E-mail <ion-text color="danger">*</ion-text></ion-label>
+        <ion-item lines="none" class="item-content" [class.invalid]="isEmailInvalid()">
+          <ion-input type="email" formControlName="email" placeholder="Digite seu E-mail"></ion-input>
+        </ion-item>
+        <!-- Mensagem de Erro para E-mail -->
+        <ion-text color="danger" *ngIf="isEmailInvalid()">Por favor, insira um e-mail válido.</ion-text>
 
-      <ion-button expand="block" fill="solid" shape="round" class="login-btn" color="primary" (click)="onHome()">
-        Entrar
-      </ion-button>
+        <!-- Campo de Senha -->
+        <ion-label position="inline" class="lbl">Senha <ion-text color="danger">*</ion-text></ion-label>
+        <ion-item lines="none" class="item-content" [class.invalid]="isPasswordInvalid()">
+          <ion-input [type]="passwordView ? 'text' : 'password'" formControlName="password" placeholder="Digite sua senha"></ion-input>
+          <ion-icon slot="end" [name]="passwordView ? 'eye-off-outline' : 'eye-outline'" (click)="togglePasswordView()" color="medium"></ion-icon>
+        </ion-item>
+        <!-- Mensagem de Erro para Senha -->
+        <ion-text color="danger" *ngIf="isPasswordInvalid()">Senha é obrigatória.</ion-text>
+
+        <ion-label class="reset-password" (click)="onResetPassword()">Esqueceu sua senha?</ion-label>
+
+        <!-- Botão de Enviar -->
+        <ion-button expand="block" fill="solid" shape="round" class="login-btn" color="primary" type="submit" [disabled]="signinForm.invalid">
+          Entrar
+        </ion-button>
+      </form>
 
       <ion-label class="or-lbl">Ou Continue com</ion-label>
 
@@ -53,7 +57,7 @@
       </ion-row>
 
       <ion-label class="bottom-lbl" (click)="onRegister()">
-        Não tem uma conta <span class="active">Inscreva-se</span>
+        Não tem uma conta? <span class="active">Inscreva-se</span>
       </ion-label>
     </div>
   </div>

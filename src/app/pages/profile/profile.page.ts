@@ -1,10 +1,7 @@
-/*
-  Authors : initappz (Rahul Jograna)
-  Website : https://initappz.com/
-  App Name : Doctor-Appointment - 1 This App Template Source code is licensed as per the
-  terms found in the Website https://initappz.com/license
-  Copyright and Good Faith Purchasers © 2023-present initappz.
-*/
+import { Observable } from 'rxjs';
+import { AuthService } from './../../services/auth.service';
+import { TokenService } from './../../services/token.service';
+
 import { Component, OnInit } from '@angular/core';
 import { UtilService } from 'src/app/services/util.service';
 
@@ -15,15 +12,32 @@ import { UtilService } from 'src/app/services/util.service';
 })
 export class ProfilePage implements OnInit {
 
+  user: any;
   constructor(
-    public util: UtilService
+    public util: UtilService,
+    private tokenService: TokenService,
+    private authService: AuthService,
   ) { }
 
   ngOnInit() {
+    this.user = this.tokenService.getUser();
   }
 
   onPage(name: any) {
     this.util.navigateToPage(name);
   }
 
+  // Método para fazer logout
+  onSignOut(): void {
+    const logout$: Observable<any> = this.authService.signOut();
+
+    logout$.subscribe({
+      next: () => {
+        this.onPage('/login'); // Redireciona para a página de login
+      },
+      error: (err) => {
+        console.error('Erro ao tentar fazer logout', err); // Tratamento de erro
+      }
+    });
+  }
 }

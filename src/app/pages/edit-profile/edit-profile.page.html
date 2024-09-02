@@ -1,10 +1,3 @@
-<!--
-  Authors : initappz (Rahul Jograna)
-  Website : https://initappz.com/
-  App Name : Doctor-Appointment - 1 This App Template Source code is licensed as per the
-  terms found in the Website https://initappz.com/license
-  Copyright and Good Faith Purchasers © 2023-present initappz.
--->
 <ion-header class="ion-no-border">
   <ion-toolbar mode="ios">
     <ion-buttons slot="start">
@@ -12,60 +5,50 @@
         <ion-icon slot="icon-only" name="arrow-back-outline"></ion-icon>
       </ion-button>
     </ion-buttons>
-    <ion-title>Edit Profile</ion-title>
+    <ion-title>Editar Perfil</ion-title>
   </ion-toolbar>
 </ion-header>
-
 <ion-content class="ion-padding">
   <div class="edit-profile-screen">
     <div class="profile-content">
       <div [ngStyle]="{'background-image': 'url(assets/images/avatar/2.jpg)'}" class="user-cover"></div>
     </div>
-    <ion-label position="inline" class="lbl">Full Name <ion-text color="danger">*</ion-text></ion-label>
+    <ion-label position="inline" class="lbl">Nome <ion-text color="danger">*</ion-text></ion-label>
+    <ion-item lines="none" class="item-content">
+      <ion-input type="text" placeholder="Digite seu nome" [(ngModel)]="user.name"></ion-input>
+    </ion-item>
+    <ion-label position="inline" class="lbl">Email <ion-text color="danger">*</ion-text></ion-label>
+    <ion-item lines="none" class="item-content">
+      <ion-input type="text" placeholder="Digite seu email" [(ngModel)]="user.email"></ion-input>
+    </ion-item>
+    <!-- <ion-label position="inline" class="lbl">Full Name <ion-text color="danger">*</ion-text></ion-label>
     <ion-item lines="none" class="item-content">
       <ion-input type="text" placeholder="Enter Your Name"></ion-input>
     </ion-item>
-
-    <ion-label position="inline" class="lbl">Email Id <ion-text color="danger">*</ion-text></ion-label>
-    <ion-item lines="none" class="item-content">
-      <ion-input type="text" placeholder="Enter Your Email"></ion-input>
-    </ion-item>
-
-    <ion-label position="inline" class="lbl">Full Name <ion-text color="danger">*</ion-text></ion-label>
-    <ion-item lines="none" class="item-content">
-      <ion-input type="text" placeholder="Enter Your Name"></ion-input>
-    </ion-item>
-
 
     <ion-label position="inline" class="lbl">Phone Number <ion-text color="danger">*</ion-text></ion-label>
     <ion-item lines="none" class="item-content">
       <ion-input type="text" placeholder="Enter Your Phone Number"></ion-input>
-    </ion-item>
-
-
-    <ion-label position="inline" class="lbl">Location <ion-text color="danger">*</ion-text></ion-label>
+    </ion-item> -->
+    <!-- <ion-label position="inline" class="lbl">Location <ion-text color="danger">*</ion-text></ion-label>
     <ion-item lines="none" class="item-content">
       <ion-input type="text" placeholder="Los Angeles, CA"></ion-input>
-    </ion-item>
-
-    <ion-label position="inline" class="lbl">Gender <ion-text color="danger">*</ion-text></ion-label>
+    </ion-item> -->
+    <ion-label position="inline" class="lbl">Sexo <ion-text color="danger">*</ion-text></ion-label>
     <ion-item lines="none" class="item-content">
-      <ion-select value="peperoni" placeholder="Select Gender">
-        <ion-select-option value="peperoni">Male</ion-select-option>
-        <ion-select-option value="hawaii">Female</ion-select-option>
+      <ion-select [(ngModel)]="user.sexo" placeholder="Selecione o sexo">
+        <ion-select-option value="m">Masculino</ion-select-option>
+        <ion-select-option value="f">Feminino</ion-select-option>
       </ion-select>
     </ion-item>
-
-    <ion-label position="inline" class="lbl">Date Of Birth <ion-text color="danger">*</ion-text></ion-label>
+    <ion-label position="inline" class="lbl">Data de Aniversário <ion-text color="danger">*</ion-text></ion-label>
     <ion-item lines="none" class="item-content">
-      <ion-input type="date" placeholder="DD/MM/YYYY"></ion-input>
+      <ion-input type="date" placeholder="DD/MM/YYYY" [(ngModel)]="user.data_aniversario"></ion-input>
     </ion-item>
   </div>
 </ion-content>
 <ion-footer>
   <ion-toolbar>
-    <ion-button expand="block" fill="solid" shape="round" color="primary">
-      Save Changes
-    </ion-button>
+    <ion-button expand="block" fill="solid" shape="round" color="primary"> Salvar alterações </ion-button>
   </ion-toolbar>
 </ion-footer>
