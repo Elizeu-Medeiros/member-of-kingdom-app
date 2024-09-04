@@ -1,7 +1,7 @@
 
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { UtilService } from 'src/app/services/util.service';
-import * as moment from 'moment';
+import moment from 'moment';
 import { register } from 'swiper/element/bundle';
 import Swiper from 'swiper';
 
