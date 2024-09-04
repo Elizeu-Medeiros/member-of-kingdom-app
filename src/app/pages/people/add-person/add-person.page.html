@@ -1,0 +1,22 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Adicionar Pessoa</ion-title>
+  </ion-toolbar>
+</ion-header>
+<ion-content class="ion-padding">
+  <form (ngSubmit)="onSubmit()" #addPersonForm="ngForm">
+    <ion-item>
+      <ion-label position="floating">Nome</ion-label>
+      <ion-input [(ngModel)]="newPerson.name" name="name" required></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label position="floating">Telefone</ion-label>
+      <ion-input [(ngModel)]="newPerson.cellPhone" name="cellPhone" required></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label position="floating">Data de Nascimento</ion-label>
+      <ion-input type="text" [(ngModel)]="newPerson.birthDate" name="birthDate" required></ion-input>
+    </ion-item>
+    <ion-button expand="full" type="submit">Salvar</ion-button>
+  </form>
+</ion-content>

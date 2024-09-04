@@ -37,11 +37,15 @@ const routes: Routes = [
       },
 
       {
-        path: 'pessoas',
+        path: 'people',
         children: [
           {
             path: '',
             loadChildren: () => import('../people/list-people/list-people.module').then(m => m.ListPeoplePageModule)
+          },
+          {
+            path: 'add-person',
+            loadChildren: () => import('../people/add-person/add-person.module').then(m => m.AddPersonPageModule)
           },
           {
             path: 'appointment-details',

@@ -68,6 +68,9 @@ export class ListPeoplePage implements OnInit {
     }
   }
 
-
+  // Função para abrir a página de cadastro
+  openAddPersonPage() {
+    this.util.navigateToPage('/add-person'); // Ajuste o caminho conforme necessário
+  }
 
 }

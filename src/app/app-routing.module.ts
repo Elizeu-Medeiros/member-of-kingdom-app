@@ -35,10 +35,7 @@ const routes: Routes = [
     path: 'audio-call',
     loadChildren: () => import('./pages/audio-call/audio-call.module').then(m => m.AudioCallPageModule)
   },
-  {
-    path: 'book-appointment',
-    loadChildren: () => import('./pages/book-appointment/book-appointment.module').then(m => m.BookAppointmentPageModule)
-  },
+
   {
     path: 'categories',
     loadChildren: () => import('./pages/categories/categories.module').then(m => m.CategoriesPageModule)
@@ -101,7 +98,7 @@ const routes: Routes = [
     loadChildren: () => import('./pages/payment-method/payment-method.module').then(m => m.PaymentMethodPageModule)
   },
   {
-    path: 'pessoas',
+    path: 'peaple',
     loadChildren: () => import('./pages/people/list-people/list-people.module').then(m => m.ListPeoplePageModule)
   },
   {
@@ -135,6 +132,10 @@ const routes: Routes = [
   {
     path: 'write-review',
     loadChildren: () => import('./pages/write-review/write-review.module').then(m => m.WriteReviewPageModule)
+  },
+  {
+    path: 'add-person',
+    loadChildren: () => import('./pages/people/add-person/add-person.module').then(m => m.AddPersonPageModule)
   }
 ];
 @NgModule({
