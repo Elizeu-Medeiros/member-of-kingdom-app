@@ -1,6 +1,11 @@
 <ion-header class="ion-no-border">
   <ion-toolbar mode="ios" color="light">
     <ion-title>Lista de Pessoas</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="openAddPersonPage()">
+        <ion-icon slot="icon-only" name="add-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
   <ion-toolbar mode="ios" color="light">
     <ion-searchbar placeholder="Name, Categories" inputmode="text" type="text" mode="ios"></ion-searchbar>

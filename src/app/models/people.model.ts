@@ -1,6 +1,7 @@
 export interface People {
   name_full: string,
-  user_id?: number,
+  type_person_id?: string,
+  user_id?: string,
   document?: string,
   phone?: string,
   cell_phone?: string,
