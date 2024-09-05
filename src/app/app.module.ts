@@ -12,16 +12,19 @@ import { AuthInterceptor } from './services/auth.interceptor';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { LoginPageRoutingModule } from './pages/login/login-routing.module';
 
-@NgModule({ declarations: [AppComponent],
-    bootstrap: [AppComponent], imports: [BrowserModule,
-        IonicModule.forRoot(),
-        AppRoutingModule], providers: [
-        { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
-        {
-            provide: HTTP_INTERCEPTORS,
-            useClass: AuthInterceptor,
-            multi: true
-        },
-        provideHttpClient(withInterceptorsFromDi())
-    ] })
+
+@NgModule({
+  declarations: [AppComponent],
+  bootstrap: [AppComponent], imports: [BrowserModule,
+    IonicModule.forRoot(),
+    AppRoutingModule], providers: [
+      { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
+      {
+        provide: HTTP_INTERCEPTORS,
+        useClass: AuthInterceptor,
+        multi: true
+      },
+      provideHttpClient(withInterceptorsFromDi())
+  ]
+})
 export class AppModule { }
