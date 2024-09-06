@@ -6,44 +6,61 @@
 <ion-content class="ion-padding">
   <form (ngSubmit)="onSubmit()" #addPersonForm="ngForm">
     <div class="edit-profile-screen">
+    <!-- Campo de Upload de Foto -->
+    <ion-item>
+      <ion-label position="stacked">Foto</ion-label>
+      <input type="file" (change)="onFileSelected($event)" accept="image/*">
+      </ion-item>
+      <!-- Seleção de Tipo de Pessoa -->
       <ion-item>
-        <ion-label position="floating">Tipo de Pessoa <ion-text color="danger">*</ion-text></ion-label>
-        <ion-select [(ngModel)]="selectedTypePerson" name="typePerson" required>
+        <ion-label position="floating">Tipo de Pessoa</ion-label>
+        <ion-select [(ngModel)]="selectedTypePerson" (ionChange)="onTypePersonChange($event)" name="type_person_id">
           <ion-select-option *ngFor="let typePerson of typePeopleList" [value]="typePerson.uuid_type_person">
             {{ typePerson.type_person_name }}
           </ion-select-option>
         </ion-select>
+      </ion-item>
+      <!-- Seleção de Igreja -->
+      <ion-item>
+        <ion-label position="floating">Igreja</ion-label>
+        <ion-select [(ngModel)]="selectedChurches" name="church_id" required>
+          <ion-select-option *ngFor="let church of churchesList" [value]="church.uuid_church">
+            {{ church.church_abbreviation + " - " + church?.district }}
+          </ion-select-option>
+        </ion-select>
+        <ion-button (click)="openAddTypePersonModal()" fill="solid" shape="round" color="primary" slot="end">
+          <ion-icon name="add"></ion-icon>
+        </ion-button>
         </ion-item>
-        <ion-item>
-          <ion-label position="floating">Igreja</ion-label>
-          <ion-select [(ngModel)]="selectedChurches" name="church_id" required>
-            <ion-select-option *ngFor="let church of churchesList" [value]="church.uuid_church">
-              {{ church.church_abbreviation + " - " + church?.district }}
-            </ion-select-option>
-          </ion-select>
-          <!-- <ion-button (click)="openAddTypePersonModal()" fill="outline" slot="end">
-                                                                                                                                                      <ion-icon name="add-circle-outline" type="button"></ion-icon> </ion-button> -->
-          <ion-button (click)="openAddTypePersonModal()" fill="solid" shape="round" color="primary" slot="end">
-            <ion-icon name="add"></ion-icon>
-          </ion-button>
+      <!-- Campo de Nome -->
+      <ion-item>
+        <ion-label position="floating">Nome <ion-text color="danger">*</ion-text></ion-label>
+        <ion-input [(ngModel)]="people.name_full" name="name_full" required></ion-input>
         </ion-item>
-        <ion-item>
-          <ion-label position="floating">Nome <ion-text color="danger">*</ion-text></ion-label>
-          <ion-input [(ngModel)]="newPerson.name" name="name" required> </ion-input>
+      <!-- Campo de Seleção de Sexo -->
+      <ion-item>
+        <ion-label position="floating">Sexo <ion-text color="danger">*</ion-text></ion-label>
+        <ion-select [(ngModel)]="people.gender" name="gender" required>
+          <ion-select-option value="m">Masculino</ion-select-option>
+          <ion-select-option value="f">Feminino</ion-select-option>
+        </ion-select>
+      </ion-item>
+      <!-- Campo de Telefone -->
+      <ion-item>
+        <ion-label position="floating">Telefone</ion-label>
+        <ion-input [(ngModel)]="people.cell_phone" name="cell_phone" required></ion-input>
         </ion-item>
-        <ion-item>
-          <ion-label position="floating">Telefone</ion-label>
-          <ion-input [(ngModel)]="newPerson.cellPhone" name="cellPhone" required></ion-input>
-          </ion-item>
-          <ion-item>
-            <ion-label position="floating">Data de Nascimento</ion-label>
-            <ion-input type="text" [(ngModel)]="newPerson.birthDate" name="birthDate" required></ion-input>
-          </ion-item>
+      <!-- Campo de Data de Nascimento -->
+      <ion-item>
+        <ion-label position="floating">Data de Nascimento</ion-label>
+        <ion-input type="date" [(ngModel)]="people.birth_date" name="birth_date" required></ion-input>
+        </ion-item>
     </div>
   </form>
 </ion-content>
+<!-- Footer com Botão de Submissão -->
 <ion-footer>
   <ion-toolbar>
-    <ion-button type="submit" expand="block" fill="solid" shape="round" color="primary"> Salvar </ion-button>
+    <ion-button type="submit" expand="block" fill="solid" shape="round" color="primary" form="addPersonForm">Salvar</ion-button>
   </ion-toolbar>
 </ion-footer>

@@ -1,3 +1,4 @@
+
 import { People } from 'src/app/models/people.model';
 
 import { Component, OnInit } from '@angular/core';
@@ -15,20 +16,25 @@ import { TypePersonService } from 'src/app/services/type-person.service';
 })
 export class AddPersonPage implements OnInit {
 
-  newPerson = {
-    name: '',
-    cellPhone: '',
-    birthDate: ''
+  people: People = {
+    name_full: '',
+    type_person_id: '',
+    user_id: '',
+    document: '',
+    phone: '',
+    cell_phone: '',
+    photo: '',
+    birth_date: '',
+    gender: ''
   };
-
-  people: People;
-
 
   typePeopleList: Array<TypePerson> = [];
   selectedTypePerson?: TypePerson;
 
   churchesList: Array<Churches> = [];
   selectedChurches?: Churches;
+
+  selectedFile?: File;
 
   constructor(
     private router: Router,
@@ -73,7 +79,7 @@ export class AddPersonPage implements OnInit {
 
   onSubmit() {
     // Lógica para salvar a nova pessoa
-    console.log('Pessoa adicionada:', this.newPerson);
+    console.log('Pessoa adicionada:', this.people);
     // this.router.navigate(['/']); // Navega de volta para a lista de pessoas
   }
 
@@ -94,6 +100,10 @@ export class AddPersonPage implements OnInit {
     // });
 
     // return await modal.present();
+  }
+
+  onFileSelected(event: any): void {
+    this.selectedFile = event.target.files[0]; // Armazena o arquivo selecionado
   }
 
 }
