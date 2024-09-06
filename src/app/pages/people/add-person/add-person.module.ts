@@ -7,8 +7,8 @@ import { IonicModule } from '@ionic/angular';
 import { AddPersonPageRoutingModule } from './add-person-routing.module';
 
 import { AddPersonPage } from './add-person.page';
-import { PhonePipe } from 'src/app/pipes/phone.pipe';
-import { DatePipe } from 'src/app/pipes/date.pipe';
+// import { PhonePipe } from 'src/app/pipes/phone.pipe';
+// import { DatePipe } from 'src/app/pipes/date.pipe';
 
 @NgModule({
   imports: [
@@ -17,6 +17,10 @@ import { DatePipe } from 'src/app/pipes/date.pipe';
     IonicModule,
     AddPersonPageRoutingModule
   ],
-  declarations: [AddPersonPage, PhonePipe, DatePipe]
+  declarations: [
+    AddPersonPage,
+    // PhonePipe,
+    // DatePipe
+  ]
 })
-export class AddPersonPageModule {}
+export class AddPersonPageModule { }
