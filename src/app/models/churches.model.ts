@@ -5,4 +5,7 @@ export interface Churches {
   district?: string,
 }
 
-
+export interface ChurchesResponse {
+  message: string;
+  data: Churches[];
+}

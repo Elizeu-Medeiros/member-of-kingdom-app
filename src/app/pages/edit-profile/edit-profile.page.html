@@ -10,15 +10,20 @@
 </ion-header>
 <ion-content class="ion-padding">
   <div class="edit-profile-screen">
-    <div class="profile-content">
-      <div [ngStyle]="{'background-image': 'url(assets/images/avatar/2.jpg)'}" class="user-cover"></div>
+  <ion-content>
+  <div class="profile-content">
+    <div [ngStyle]="{'background-image': selectedImage ? 'url(' + selectedImage + ')' : 'url(assets/images/avatar/2.jpg)'}" class="user-cover"></div>
     </div>
-    <ion-label position="inline" class="lbl">Nome <ion-text color="danger">*</ion-text></ion-label>
+<ion-button (click)="takePhoto()" expand="block"> Tirar Foto </ion-button>
+</ion-content>
+
     <ion-item lines="none" class="item-content">
+      <ion-label position="floating" class="lbl">Nome <ion-text color="danger">*</ion-text></ion-label>
       <ion-input type="text" placeholder="Digite seu nome" [(ngModel)]="user.name"></ion-input>
     </ion-item>
-    <ion-label position="inline" class="lbl">Email <ion-text color="danger">*</ion-text></ion-label>
+
     <ion-item lines="none" class="item-content">
+      <ion-label position="floating" class="lbl">Email <ion-text color="danger">*</ion-text></ion-label>
       <ion-input type="text" placeholder="Digite seu email" [(ngModel)]="user.email"></ion-input>
     </ion-item>
     <!-- <ion-label position="inline" class="lbl">Full Name <ion-text color="danger">*</ion-text></ion-label>
@@ -34,16 +39,18 @@
     <ion-item lines="none" class="item-content">
       <ion-input type="text" placeholder="Los Angeles, CA"></ion-input>
     </ion-item> -->
-    <ion-label position="inline" class="lbl">Sexo <ion-text color="danger">*</ion-text></ion-label>
     <ion-item lines="none" class="item-content">
+      <ion-label position="floating" class="lbl">Sexo <ion-text color="danger">*</ion-text></ion-label>
       <ion-select [(ngModel)]="user.sexo" placeholder="Selecione o sexo">
         <ion-select-option value="m">Masculino</ion-select-option>
         <ion-select-option value="f">Feminino</ion-select-option>
       </ion-select>
     </ion-item>
-    <ion-label position="inline" class="lbl">Data de Aniversário <ion-text color="danger">*</ion-text></ion-label>
+
     <ion-item lines="none" class="item-content">
-      <ion-input type="date" placeholder="DD/MM/YYYY" [(ngModel)]="user.data_aniversario"></ion-input>
+      <ion-label position="floating" class="lbl">Data de Aniversário <ion-text color="danger">*</ion-text></ion-label>
+      <ion-input type="date" [(ngModel)]="user.data_aniversario">
+      </ion-input>
     </ion-item>
   </div>
 </ion-content>

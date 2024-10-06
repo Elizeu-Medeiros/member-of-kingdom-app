@@ -23,14 +23,15 @@ export class ListPeoplePage implements OnInit {
   }
 
   getPeople(): void {
-    this.peopleService.getPeoples().subscribe(
-      (data: People[]) => {
+    this.peopleService.getPeoples().subscribe({
+      next: (data: People[]) => {
         this.peopleList = data;
       },
-      error => {
+      error: (error) => {
         console.error('Erro ao buscar usuários:', error);
+        this.util.showToast('Erro ao carregar pessoas', 'danger', 'top');
       }
-    );
+    });
   }
 
   deletePeople(id: number): void {
