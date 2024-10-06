@@ -1,9 +1,10 @@
 import { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'io.initappz.marketplace.doctor.appointment.capacitor',
-  appName: 'DoctorApp',
+  appId: 'com.memberkingdom.capacitor',
+  appName: 'Member of Kingdom',
   webDir: 'www',
+  bundledWebRuntime: false,
   server: {
     androidScheme: 'https'
   }

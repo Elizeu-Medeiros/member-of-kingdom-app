@@ -1,7 +1,7 @@
-import { Churches } from './../models/churches.model';
+import { ChurchesResponse, Churches } from './../models/churches.model';
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { catchError, map, Observable, throwError } from 'rxjs';
 import { environment } from 'src/environments/environment';
 @Injectable({
   providedIn: 'root'
@@ -13,7 +13,16 @@ export class ChurchesService {
 
   // Método para obter todos os usuários
   getChurches(): Observable<Churches[]> {
-    return this.http.get<Churches[]>(this.apiUrl);
+    return this.http.get<ChurchesResponse>(this.apiUrl).pipe(
+      map((response: ChurchesResponse) => {
+        // Se a resposta tiver um array `data`, retornamos, senão, um array vazio
+        return response?.data ?? [];
+      }),
+      catchError((error: HttpErrorResponse) => {
+        console.error('Erro ao buscar igrejas:', error);
+        return throwError(() => new Error('Erro ao buscar igrejas. Tente novamente mais tarde.'));
+      })
+    );
   }
 
   // Método para obter um usuário específico por ID
