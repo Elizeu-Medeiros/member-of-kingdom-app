@@ -15,6 +15,21 @@
   <form [formGroup]="addPersonForm" (ngSubmit)="onSubmit()">
     <div class="edit-profile-screen">
       <!-- Exibir Foto Capturada -->
+      <!-- Ícones para captura de foto e upload de arquivo -->
+      <div class="upload-options">
+        <!-- Ícone para capturar foto com a câmera -->
+        <ion-button fill="clear" (click)="capturePhoto()">
+          <ion-icon name="camera-outline"></ion-icon> <!-- Ícone da câmera -->
+        </ion-button>
+        <!-- Ícone para fazer upload de imagem do dispositivo -->
+        <ion-button fill="clear" (click)="selectFromGallery()">
+          <ion-icon name="cloud-upload-outline"></ion-icon> <!-- Ícone de upload -->
+        </ion-button>
+      </div>
+      <!-- Exibe a imagem carregada -->
+      <div *ngIf="imageUrl" class="image-preview">
+        <img [src]="imageUrl" alt="Imagem Carregada" class="user-cover" />
+      </div>
       <!-- <ion-item>
               <div class="profile-content">
                 <div [ngStyle]="{'background-image': selectedImage ? 'url(' + selectedImage + ')' : 'url(assets/images/avatar/2.jpg)'}" class="user-cover"></div>
@@ -22,23 +37,23 @@
               <ion-button (click)="takePhoto()" expand="block">Tirar Foto</ion-button>
             </ion-item> -->
       <!-- Seleção de Tipo de Pessoa -->
-    <ion-item lines="none" class="item-content">
-      <ion-label position="floating" class="lbl">Tipo de Pessoa</ion-label>
-      <ion-select formControlName="type_people_id">
-        <ion-select-option *ngFor="let typePerson of typePeopleList" [value]="typePerson.uuid_type_person">
-          {{ typePerson.type_person_name }}
-        </ion-select-option>
-      </ion-select>
-    </ion-item>
-    <!-- Seleção de Igreja -->
-    <ion-item lines="none" class="item-content">
-      <ion-label position="floating" class="lbl">Igreja</ion-label>
-      <ion-select formControlName="church_id">
-        <ion-select-option *ngFor="let church of churchesList" [value]="church.uuid_church">
-          {{ church.church_abbreviation }} - {{ church?.district }}
+      <ion-item lines="none" class="item-content">
+        <ion-label position="floating" class="lbl">Tipo de Pessoa</ion-label>
+        <ion-select formControlName="type_people_id">
+          <ion-select-option *ngFor="let typePeople of typePeopleList" [value]="typePeople.uuid_type_people">
+            {{ typePeople.type_people_name }}
           </ion-select-option>
           </ion-select>
-    </ion-item>
+          </ion-item>
+          <!-- Seleção de Igreja -->
+          <ion-item lines="none" class="item-content">
+            <ion-label position="floating" class="lbl">Igreja</ion-label>
+            <ion-select formControlName="church_id">
+              <ion-select-option *ngFor="let church of churchesList" [value]="church.uuid_church">
+                {{ church.church_abbreviation }} - {{ church?.district }}
+          </ion-select-option>
+        </ion-select>
+        </ion-item>
       <!-- Campo de Nome -->
       <ion-item lines="none" class="item-content">
         <ion-label position="floating" class="lbl">Nome <ion-text color="danger">*</ion-text></ion-label>
@@ -66,4 +81,4 @@
     <!-- Footer com Botão de Submissão -->
     <ion-button type="submit" expand="block" fill="solid" shape="round" color="primary">Salvar</ion-button>
   </form>
-  </ion-content>
+</ion-content>

@@ -41,7 +41,7 @@
     </ion-item> -->
     <ion-item lines="none" class="item-content">
       <ion-label position="floating" class="lbl">Sexo <ion-text color="danger">*</ion-text></ion-label>
-      <ion-select [(ngModel)]="user.sexo" placeholder="Selecione o sexo">
+      <ion-select [(ngModel)]="user" placeholder="Selecione o sexo">
         <ion-select-option value="m">Masculino</ion-select-option>
         <ion-select-option value="f">Feminino</ion-select-option>
       </ion-select>
@@ -49,7 +49,7 @@
 
     <ion-item lines="none" class="item-content">
       <ion-label position="floating" class="lbl">Data de Aniversário <ion-text color="danger">*</ion-text></ion-label>
-      <ion-input type="date" [(ngModel)]="user.data_aniversario">
+      <ion-input type="date" [(ngModel)]="user">
       </ion-input>
     </ion-item>
   </div>

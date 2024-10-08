@@ -1,11 +1,8 @@
 export interface User {
-  id?: number,
-  uuid: string,
+  uuid_user: string,
   name: string,
   email: string,
   password?: string,
-  sexo?: 'm' | 'f',
-  data_aniversario: string,
 }
 
 

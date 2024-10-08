@@ -136,7 +136,12 @@ const routes: Routes = [
   {
     path: 'add-person',
     loadChildren: () => import('./pages/people/add-person/add-person.module').then(m => m.AddPersonPageModule)
+  },
+  {
+    path: 'info-people',
+    loadChildren: () => import('./pages/people/info-people/info-people.module').then(m => m.InfoPeoplePageModule)
   }
+
 ];
 @NgModule({
   imports: [

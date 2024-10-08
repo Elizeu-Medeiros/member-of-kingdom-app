@@ -4,12 +4,13 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Churches } from 'src/app/models/churches.model';
 import { ChurchesService } from 'src/app/services/churches.service';
-import { TypePerson } from 'src/app/models/type-person.model';
-import { TypePersonService } from 'src/app/services/type-person.service';
+import { TypePeople } from 'src/app/models/typePeople.model';
+import { TypePeopleService } from 'src/app/services/type-perople.service';
 import { UtilService } from 'src/app/services/util.service';
-import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
+import { Camera, CameraResultType, CameraSource, Photo } from '@capacitor/camera';
 import { PeopleService } from 'src/app/services/people.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FirebaseStorageService } from 'src/app/services/firebase-storage.service';
 
 
 @Component({
@@ -34,8 +35,8 @@ export class AddPersonPage implements OnInit {
     church_id: '',
   };
 
-  typePeopleList: Array<TypePerson> = [];
-  selectedTypePerson?: TypePerson;
+  typePeopleList: Array<TypePeople> = [];
+  selectedTypePerson?: TypePeople;
 
   churchesList: Churches[] = [];  // Lista de igrejas
   selectedChurches?: Churches;
@@ -43,13 +44,16 @@ export class AddPersonPage implements OnInit {
   selectedFile?: File;
   selectedImage: string | undefined;
 
+  imageUrl: string;
+
   constructor(
     private router: Router,
-    private typePersonService: TypePersonService,
+    private typePeopleService: TypePeopleService,
     private churchesService: ChurchesService,
     private peopleService: PeopleService,
     private fb: FormBuilder,
-    public util: UtilService
+    public util: UtilService,
+    private firebaseStorageService: FirebaseStorageService
   ) {
     this.addPersonForm = this.fb.group({
       name_full: ['', [Validators.required]],
@@ -64,25 +68,80 @@ export class AddPersonPage implements OnInit {
   ngOnInit(): void {
     this.getTypePerson();
     this.getChurches();
+
+    // Faz o download da imagem e obtém a URL
+    this.firebaseStorageService.getImageDownloadUrl('images/1728324924333_image.jpg')
+      .subscribe(url => {
+        this.imageUrl = url;  // Armazena a URL da imagem no componente
+        console.log('URL da Imagem:', this.imageUrl);
+      });
+
   }
 
-  // Método para capturar a foto usando a câmera
-  async takePhoto() {
-    const image = await Camera.getPhoto({
+  async captureAndUpload() {
+    const image: Photo = await Camera.getPhoto({
       quality: 90,
-      allowEditing: false,
-      resultType: CameraResultType.Uri, // Use Uri para obter uma URL da imagem
-      source: CameraSource.Camera, // Usar a câmera
+      resultType: CameraResultType.Uri,
+      source: CameraSource.Camera,
     });
 
-    this.selectedImage = image.webPath; // Salvar a URL da imagem para exibi-la
-    this.people.photo = image.webPath; // Salvar a imagem no objeto 'people'
+    if (image.webPath) {
+      const response = await fetch(image.webPath);
+      const blob = await response.blob();
+      const fileName = `images/${new Date().getTime()}_image.jpg`;
+
+      // Faz o upload da imagem e obtém a URL
+      this.firebaseStorageService.uploadImage(fileName, new File([blob], fileName))
+        .subscribe(url => {
+          this.imageUrl = url;  // Armazena a URL da imagem no componente
+          console.log('URL da Imagem:', this.imageUrl);
+        });
+    }
   }
+
+  // Método para capturar foto usando a câmera
+  async capturePhoto() {
+    const image: Photo = await Camera.getPhoto({
+      quality: 90,
+      resultType: CameraResultType.Uri,
+      source: CameraSource.Camera, // Usar câmera
+    });
+
+    if (image.webPath) {
+      this.uploadImage(image.webPath);
+    }
+  }
+
+  // Método para selecionar imagem da galeria
+  async selectFromGallery() {
+    const image: Photo = await Camera.getPhoto({
+      quality: 90,
+      resultType: CameraResultType.Uri,
+      source: CameraSource.Photos, // Usar galeria de fotos
+    });
+
+    if (image.webPath) {
+      this.uploadImage(image.webPath);
+    }
+  }
+
+  // Método de upload genérico
+  async uploadImage(imagePath: string) {
+    const response = await fetch(imagePath);
+    const blob = await response.blob();
+
+    const fileName = `images/${new Date().getTime()}_image.jpg`;
+    this.firebaseStorageService.uploadImage(fileName, new File([blob], fileName))
+      .subscribe(url => {
+        this.imageUrl = url; // Armazena a URL da imagem
+      });
+  }
+
 
   // Método para carregar os tipos de pessoa
   getTypePerson() {
-    this.typePersonService.getTypePersons().subscribe({
-      next: (data: TypePerson[]) => {
+    this.typePeopleService.getTypePeoples().subscribe({
+      next: (data: TypePeople[]) => {
         this.typePeopleList = data;
       },
       error: (error) => {
