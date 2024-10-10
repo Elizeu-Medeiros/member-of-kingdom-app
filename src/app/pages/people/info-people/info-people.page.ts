@@ -5,6 +5,8 @@ import { Observable, of, tap } from 'rxjs';
 import { People } from 'src/app/models/people.model';
 import { FirebaseStorageService } from 'src/app/services/firebase-storage.service';
 import { UtilService } from 'src/app/services/util.service';
+import * as L from 'leaflet';
+import { GeocodingService } from 'src/app/services/geocoding.service';
 
 @Component({
   selector: 'app-info-people',
@@ -16,9 +18,13 @@ export class InfoPeoplePage implements OnInit {
   public people: any;
   imageCache: { [key: string]: string } = {};
 
+  map: L.Map | undefined;
+
+
   constructor(
     public util: UtilService,
     private firebaseStorageService: FirebaseStorageService,
+    private geocodingService: GeocodingService,
     private route: ActivatedRoute
   ) { }
 
@@ -38,9 +44,56 @@ export class InfoPeoplePage implements OnInit {
         }
       }
     });
+
+    // this.geocodeAndLoadMap('Manoel Olimpio de Ceia, Viaduto, Araruama');
+
   }
 
 
+  ngAfterViewInit() {
+    // Inicialize o mapa após a visualização ser carregada
+    // this.initMap();
+  }
+
+  initMap() {
+
+
+    const map = L.map('map').setView([-22.878385, -42.351861], 13); // Coordenadas iniciais
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 15,
+      // attribution: '© OpenStreetMap'
+    }).addTo(map);
+  }
+
+  geocodeAndLoadMap(address: string) {
+    this.geocodingService.geocodeAddress(address).subscribe((results) => {
+      if (results && results.length > 0) {
+        const { lat, lon } = results[0]; // Pega latitude e longitude do primeiro resultado
+        this.loadMap(lat, lon);
+      } else {
+        console.error('Endereço não encontrado.');
+      }
+    });
+  }
+
+  loadMap(lat: number, lon: number) {
+    this.map = L.map('map').setView([lat, lon], 13);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '© OpenStreetMap contributors'
+    }).addTo(this.map);
+
+    L.marker([lat, lon]).addTo(this.map)
+      .bindPopup('Local do endereço')
+      .openPopup();
+  }
+
+  ionViewDidLeave() {
+    if (this.map) {
+      this.map.remove();
+    }
+  }
 
   // Método para obter a URL da imagem com cache
   getImagemUrl(people: People): void {
@@ -66,6 +119,21 @@ export class InfoPeoplePage implements OnInit {
       console.log('Photo URL', people.photoUrl);
     }
   }
+
+  onEditProfile(people: People) {
+    const param = {
+      queryParams: {
+        people: JSON.stringify(people)
+      }
+    };
+    this.util.navigateToPage('/add-people', param);
+  }
+
+  onWhatsApp() {
+
+  }
+
+  onQrCode() { }
 
   onBack() {
     this.util.onBack();

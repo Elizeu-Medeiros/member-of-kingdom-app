@@ -417,10 +417,13 @@ export class UtilService {
   ) {
   }
 
-  navigateToPage(routes: any, param?: NavigationExtras | undefined) {
+  navigateToPage(route: string, param?: NavigationExtras) {
     this.zone.run(() => {
-      console.log(routes, param);
-      this.router.navigate([routes], param);
+      if (param) {
+        this.router.navigate([route], param);
+      } else {
+        this.router.navigate([route]);
+      }
     });
   }
 

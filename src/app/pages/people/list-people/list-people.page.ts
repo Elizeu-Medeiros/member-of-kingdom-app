@@ -104,6 +104,10 @@ export class ListPeoplePage implements OnInit {
   }
 
 
+  editarPeople(people: People) {
+
+
+  }
 
 
 }

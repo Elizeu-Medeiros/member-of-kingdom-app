@@ -3,6 +3,7 @@ import { TypePeople } from "./typePeople.model";
 import { User } from "./user.model";
 
 export interface People {
+  uuid_people?: string,
   name_full: string,
   type_people_id?: string,
   user_id?: string,

@@ -134,7 +134,7 @@ const routes: Routes = [
     loadChildren: () => import('./pages/write-review/write-review.module').then(m => m.WriteReviewPageModule)
   },
   {
-    path: 'add-person',
+    path: 'add-people',
     loadChildren: () => import('./pages/people/add-person/add-person.module').then(m => m.AddPersonPageModule)
   },
   {
