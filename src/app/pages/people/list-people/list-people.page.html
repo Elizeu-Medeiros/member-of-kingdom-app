@@ -13,23 +13,23 @@
 </ion-header>
 <ion-content class="ion-padding">
   <div class="appointments-screen">
-    <ion-card mode="ios" class="ion-activatable ripple-parent card-content" *ngFor="let person of peopleList; let i = index;" (click)="onPersonInfo(person)">
+    <ion-card mode="ios" class="ion-activatable ripple-parent card-content" *ngFor="let people of peopleList; let i = index;" (click)="onPersonInfo(people)">
       <ion-ripple-effect></ion-ripple-effect>
       <ion-row class="row-content">
         <ion-col size="3">
-          <div class="person-photo" [ngStyle]="{'background-image': 'url(' + getAvatarUrl(person)  + ')'}"></div>
+          <img [src]="people.photoUrl" alt="Imagem Carregada" class="doc-cover" />
           <div class="name-content">
-            <div class="status">
-              <span *ngIf="i % 2 != 0" class="green">Membro</span>
-              <span *ngIf="i % 2 == 0" class="yello">Visitante</span>
+          <div class="status">
+            <span *ngIf="people.type_people?.type_people_name === 'Membro'" class="green">Membro</span>
+            <span *ngIf="people.type_people?.type_people_name === 'Visitante'" class="yello">Visitante</span>
             </div>
           </div>
         </ion-col>
         <ion-col size="9">
           <div class="name-content">
-            <ion-label class="name"> {{ person.name_full }} </ion-label>
-            <ion-label class="type"> {{ (person.cell_phone ?? '') | phone}} </ion-label>
-            <ion-label class="date"> {{ (person.birth_date ?? '') | formatDate }}</ion-label>
+            <ion-label class="name"> {{ people.name_full }} </ion-label>
+            <ion-label class="type"> {{ (people.cell_phone ?? '') | phone}} </ion-label>
+            <ion-label class="date"> {{ (people.birth_date ?? '') | formatDate }}</ion-label>
           </div>
         </ion-col>
       </ion-row>

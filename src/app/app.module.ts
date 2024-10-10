@@ -11,11 +11,17 @@ import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi } from '@a
 import { AuthInterceptor } from './services/auth.interceptor';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { LoginPageRoutingModule } from './pages/login/login-routing.module';
+import { AngularFireModule } from '@angular/fire/compat';
+import { AngularFireStorageModule } from '@angular/fire/compat/storage'; // Módulo de Storage
+import { environment } from '../environments/environment';
 
 
 @NgModule({
   declarations: [AppComponent],
-  bootstrap: [AppComponent], imports: [BrowserModule,
+  bootstrap: [AppComponent],
+  imports: [BrowserModule,
+    AngularFireModule.initializeApp(environment.firebaseConfig), // Inicialização do Firebase
+    AngularFireStorageModule, // Módulo de Storage
     IonicModule.forRoot(),
     AppRoutingModule], providers: [
       { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },

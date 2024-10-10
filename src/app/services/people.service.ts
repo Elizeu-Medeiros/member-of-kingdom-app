@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { catchError, map, Observable, throwError } from 'rxjs';
 import { People, PeoplesResponse } from '../models/people.model';
 import { environment } from 'src/environments/environment';
@@ -14,16 +14,7 @@ export class PeopleService {
 
   // Método para obter todos os usuários
   getPeoples(): Observable<People[]> {
-    return this.http.get<PeoplesResponse>(this.apiUrl).pipe(
-      map((response: PeoplesResponse) => {
-        // Se a resposta tiver um array `data`, retornamos, senão, um array vazio
-        return response?.data ?? [];
-      }),
-      catchError((error: HttpErrorResponse) => {
-        console.error('Erro ao buscar igrejas:', error);
-        return throwError(() => new Error('Erro ao buscar pessoas. Tente novamente mais tarde.'));
-      })
-    );
+    return this.http.get<People[]>(this.apiUrl);
   }
 
   // Método para obter um usuário específico por ID
@@ -37,9 +28,17 @@ export class PeopleService {
   }
 
   // Método para atualizar um usuário existente
-  updatePeople(id: number, People: People): Observable<People> {
-    return this.http.put<People>(`${this.apiUrl}/${id}`, People);
+  // updatePeople(fk_people: string, People: People): Observable<People> {
+  //   return this.http.put<People>(`${this.apiUrl}/${fk_people}`, People);
+  // }
+  updatePeople(uuid: string, people: People): Observable<any> {
+    return this.http.put<any>(`${this.apiUrl}/${uuid}`, people, {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json'
+      })
+    });
   }
+
 
   // Método para excluir um usuário por ID
   deletePeople(id: number): Observable<void> {
