@@ -1,14 +1,14 @@
 <ion-header class="ion-no-border">
   <ion-toolbar mode="ios">
-    <ion-title>Entrar</ion-title>
+
   </ion-toolbar>
 </ion-header>
 
 <ion-content class="ion-padding">
   <div class="login-register-screen">
     <div class="logo-content">
-      <img src="assets/images/images/logo.png" alt="" class="img">
-      <ion-label class="title">Member of Kingdom</ion-label>
+      <img src="assets/images/images/logo-member-of-kingdom.png" alt="" class="img">
+      <!-- <ion-label class="title">Member of Kingdom</ion-label> -->
     </div>
 
     <div class="login-content">
@@ -31,7 +31,7 @@
         <!-- Mensagem de Erro para Senha -->
         <ion-text color="danger" *ngIf="isPasswordInvalid()">Senha é obrigatória.</ion-text>
 
-        <ion-label class="reset-password" (click)="onResetPassword()">Esqueceu sua senha?</ion-label>
+        <!-- <ion-label class="reset-password" (click)="onResetPassword()">Esqueceu sua senha?</ion-label> -->
 
         <!-- Botão de Enviar -->
         <ion-button expand="block" fill="solid" shape="round" class="login-btn" color="primary" type="submit" [disabled]="signinForm.invalid">
@@ -39,9 +39,9 @@
         </ion-button>
       </form>
 
-      <ion-label class="or-lbl">Ou Continue com</ion-label>
+      <!-- <ion-label class="or-lbl">Ou Continue com</ion-label> -->
 
-      <ion-row class="social-btn">
+      <!-- <ion-row class="social-btn">
         <ion-col size="6">
           <ion-button expand="block" fill="solid" shape="round" color="light" (click)="onHome()">
             <ion-icon slot="start" name="logo-google" color="danger"></ion-icon>
@@ -54,11 +54,11 @@
             Apple
           </ion-button>
         </ion-col>
-      </ion-row>
+      </ion-row> -->
 
-      <ion-label class="bottom-lbl" (click)="onRegister()">
+      <!-- <ion-label class="bottom-lbl" (click)="onRegister()">
         Não tem uma conta? <span class="active">Inscreva-se</span>
-      </ion-label>
+      </ion-label> -->
     </div>
   </div>
 </ion-content>
