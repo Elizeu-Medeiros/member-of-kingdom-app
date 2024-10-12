@@ -30,7 +30,7 @@ export class ListPeoplePage implements OnInit {
   getPeople(): void {
     this.peopleService.getPeoples().subscribe({
       next: (response) => {
-        this.peopleList = response; // Atribui os dados da pessoa à lista
+        this.peopleList = response // Atribui os dados da pessoa à lista
         this.peopleList.forEach(people => {
           this.getImagemUrl(people); // Carrega e armazena a URL da imagem para cada pessoa
         });

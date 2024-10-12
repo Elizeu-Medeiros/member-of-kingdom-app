@@ -46,6 +46,7 @@ export class AddPersonPage implements OnInit {
   selectedImage: string | undefined;
 
   imageUrl: string | undefined;
+  imagemFileName: string | undefined;
 
   constructor(
     private router: Router,
@@ -60,6 +61,7 @@ export class AddPersonPage implements OnInit {
     this.addPersonForm = this.fb.group({
       name_full: ['', [Validators.required]],
       type_people_id: ['', [Validators.required]],
+      member_id: [''],
       church_id: [''],
       cell_phone: ['', [Validators.pattern('^[0-9]{10,11}$')]],
       gender: [''],
@@ -73,11 +75,11 @@ export class AddPersonPage implements OnInit {
     this.getChurches();
 
     // Faz o download da imagem e obtém a URL
-    this.firebaseStorageService.getImageDownloadUrl('images/1728324924333_image.jpg')
-      .subscribe(url => {
-        this.imageUrl = url;  // Armazena a URL da imagem no componente
-        // console.log('URL da Imagem:', this.imageUrl);
-      });
+    // this.firebaseStorageService.getImageDownloadUrl('images/1728324924333_image.jpg')
+    //   .subscribe(url => {
+    //     this.imageUrl = url;  // Armazena a URL da imagem no componente
+    //     // console.log('URL da Imagem:', this.imageUrl);
+    //   });
 
     // Recupera os dados da pessoa enviados pela rota
     this.route.queryParams.subscribe(params => {
@@ -103,6 +105,8 @@ export class AddPersonPage implements OnInit {
         uuid_people: people.uuid_people,
         name_full: people.name_full,
         type_people_id: people.type_people?.uuid_type_people,
+        member_id: people.member?.uuid_member,
+        church_id: people.member?.church?.uuid_church,
         cell_phone: people.cell_phone,
         birth_date: people.birth_date,
         gender: people.gender,
@@ -116,12 +120,16 @@ export class AddPersonPage implements OnInit {
     if (this.addPersonForm.valid) {
       const formData = this.addPersonForm.value;
 
+      this.addPersonForm.patchValue({
+        photo: this.imagemFileName,
+      });
+
       if (this.people && this.people.uuid_people) {
         // Se houver um ID, é uma atualização
         this.peopleService.updatePeople(this.people.uuid_people, formData).subscribe(
           response => {
             this.util.showToast('Pessoa atualizada com sucesso!', 'success', 'bottom');
-            this.util.navigateToPage('/info-people');
+            this.util.navigateToPage('/list-people');
           },
           error => {
             this.util.showToast('Erro ao atualizar pessoa', 'danger', 'top');
@@ -132,8 +140,8 @@ export class AddPersonPage implements OnInit {
         this.peopleService.createPeople(formData).subscribe(
           response => {
             this.util.showToast('Pessoa criada com sucesso!', 'success', 'bottom');
-            // this.util.navigateToPage('/lis-people');
-            this.onBack();
+            this.util.navigateToPage('/lis-people');
+            // this.onBack();
           },
           error => {
             this.util.showToast('Erro ao criar pessoa', 'danger', 'top');
@@ -158,6 +166,9 @@ export class AddPersonPage implements OnInit {
       const blob = await response.blob();
       const fileName = `images/${new Date().getTime()}_image.jpg`;
 
+      this.addPersonForm.patchValue({
+        photo: fileName,
+      });
       // Faz o upload da imagem e obtém a URL
       this.firebaseStorageService.uploadImage(fileName, new File([blob], fileName))
         .subscribe(url => {
@@ -199,20 +210,26 @@ export class AddPersonPage implements OnInit {
     const blob = await response.blob();
 
     const fileName = `images/${new Date().getTime()}_image.jpg`;
+
+    this.addPersonForm.patchValue({
+      photo: fileName,
+    });
+
     this.firebaseStorageService.uploadImage(fileName, new File([blob], fileName))
       .subscribe(url => {
         this.imageUrl = url; // Armazena a URL da imagem
-        this.addPersonForm.patchValue({ photo: url }); // Atualiza o campo 'photo' com a URL no formulário
+        // this.addPersonForm.patchValue({ photo: url }); // Atualiza o campo 'photo' com a URL no formulário
         console.log('URL da imagem salva no formulário:', url);
       });
   }
 
   getImageUrl(imagemUrl: string) {
+    this.imagemFileName = imagemUrl;
     // Faz o download da imagem e obtém a URL
     this.firebaseStorageService.getImageDownloadUrl(imagemUrl)
       .subscribe(url => {
         this.imageUrl = url;  // Armazena a URL da imagem no componente
-  // console.log('URL da Imagem:', this.imageUrl);
+        // console.log('URL da Imagem:', this.imageUrl);
       });
   }
 

@@ -14,7 +14,16 @@ export class PeopleService {
 
   // Método para obter todos os usuários
   getPeoples(): Observable<People[]> {
-    return this.http.get<People[]>(this.apiUrl);
+    return this.http.get<PeoplesResponse>(this.apiUrl).pipe(
+      map((response: PeoplesResponse) => {
+        // Se a resposta tiver um array `data`, retornamos, senão, um array vazio
+        return response?.data ?? [];
+      }),
+      catchError((error: HttpErrorResponse) => {
+        console.error('Erro ao buscar pessoas:', error);
+        return throwError(() => new Error('Erro ao buscar pessoas. Tente novamente mais tarde.'));
+      })
+    );
   }
 
   // Método para obter um usuário específico por ID
