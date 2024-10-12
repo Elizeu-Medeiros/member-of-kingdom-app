@@ -13,8 +13,14 @@ export class PeopleService {
   constructor(private http: HttpClient) { }
 
   // Método para obter todos os usuários
-  getPeoples(): Observable<People[]> {
-    return this.http.get<PeoplesResponse>(this.apiUrl).pipe(
+  getPeoples(page: number, limit: number, name?: string): Observable<People[]> {
+    let params: any = { page, limit };
+
+    if (name) {
+      params.name = name;
+    }
+
+    return this.http.get<PeoplesResponse>(this.apiUrl, { params }).pipe(
       map((response: PeoplesResponse) => {
         // Se a resposta tiver um array `data`, retornamos, senão, um array vazio
         return response?.data ?? [];
@@ -25,6 +31,7 @@ export class PeopleService {
       })
     );
   }
+
 
   // Método para obter um usuário específico por ID
   getPeople(id: number): Observable<People> {

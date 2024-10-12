@@ -187,9 +187,10 @@ export class AddPersonPage implements OnInit {
     });
 
     if (image.webPath) {
-      this.uploadImage(image.webPath);
+      await this.uploadImage(image.webPath);
     }
   }
+
 
   // Método para selecionar imagem da galeria
   async selectFromGallery() {
@@ -200,28 +201,46 @@ export class AddPersonPage implements OnInit {
     });
 
     if (image.webPath) {
-      this.uploadImage(image.webPath);
+      await this.uploadImage(image.webPath);
     }
   }
 
+
   // Método de upload genérico
+  // async uploadImage(imagePath: string) {
+  //   const response = await fetch(imagePath);
+  //   const blob = await response.blob();
+
+  //   const fileName = `images/${new Date().getTime()}_image.jpg`;
+
+  //   this.addPersonForm.patchValue({
+  //     photo: fileName,
+  //   });
+
+  //   this.firebaseStorageService.uploadImage(fileName, new File([blob], fileName))
+  //     .subscribe(url => {
+  //       this.imageUrl = url; // Armazena a URL da imagem
+  //       // this.addPersonForm.patchValue({ photo: url }); // Atualiza o campo 'photo' com a URL no formulário
+  //       console.log('URL da imagem salva no formulário:', url);
+  //     });
+  // }
   async uploadImage(imagePath: string) {
-    const response = await fetch(imagePath);
-    const blob = await response.blob();
+    try {
+      // Comprime a imagem antes de enviá-la
+      const compressedBlob = await this.compressImage(imagePath);
 
-    const fileName = `images/${new Date().getTime()}_image.jpg`;
-
-    this.addPersonForm.patchValue({
-      photo: fileName,
-    });
-
-    this.firebaseStorageService.uploadImage(fileName, new File([blob], fileName))
-      .subscribe(url => {
-        this.imageUrl = url; // Armazena a URL da imagem
-        // this.addPersonForm.patchValue({ photo: url }); // Atualiza o campo 'photo' com a URL no formulário
-        console.log('URL da imagem salva no formulário:', url);
-      });
+      const fileName = `images/${new Date().getTime()}_image.jpg`;
+      this.firebaseStorageService.uploadImage(fileName, new File([compressedBlob], fileName))
+        .subscribe(url => {
+          this.imageUrl = url; // Armazena a URL da imagem
+          this.addPersonForm.patchValue({ photo: fileName }); // Atualiza o campo 'photo' com o caminho no formulário
+          console.log('URL da imagem salva no formulário:', fileName);
+        });
+    } catch (error) {
+      console.error('Erro ao comprimir e fazer upload da imagem:', error);
+    }
   }
+
 
   getImageUrl(imagemUrl: string) {
     this.imagemFileName = imagemUrl;
@@ -257,6 +276,46 @@ export class AddPersonPage implements OnInit {
         console.error('Erro ao carregar igrejas:', error);
         this.util.showToast('Erro ao carregar igrejas', 'danger', 'top');
       }
+    });
+  }
+
+  async compressImage(imagePath: string, maxWidth: number = 800, maxHeight: number = 800, quality: number = 0.7): Promise<Blob> {
+    const img = new Image();
+    img.src = imagePath;
+
+    return new Promise<Blob>((resolve, reject) => {
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        let width = img.width;
+        let height = img.height;
+
+        // Mantém a proporção da imagem
+        if (width > maxWidth) {
+          height = Math.round((maxWidth / width) * height);
+          width = maxWidth;
+        }
+        if (height > maxHeight) {
+          width = Math.round((maxHeight / height) * width);
+          height = maxHeight;
+        }
+
+        canvas.width = width;
+        canvas.height = height;
+
+        const ctx = canvas.getContext('2d');
+        ctx?.drawImage(img, 0, 0, width, height);
+
+        // Converte o canvas em um blob comprimido
+        canvas.toBlob((blob) => {
+          if (blob) {
+            resolve(blob);
+          } else {
+            reject(new Error('Erro ao comprimir imagem'));
+          }
+        }, 'image/jpeg', quality); // Define o formato da imagem e a qualidade (0 a 1)
+      };
+
+      img.onerror = reject;
     });
   }
 

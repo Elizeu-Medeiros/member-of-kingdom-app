@@ -1,4 +1,3 @@
-
 import { Component, OnInit } from '@angular/core';
 import { NavigationExtras } from '@angular/router';
 import { People } from 'src/app/models/people.model';
@@ -17,6 +16,12 @@ export class ListPeoplePage implements OnInit {
 
   imageCache: { [key: string]: string } = {};
 
+  currentPage: number = 1;
+  itemsPerPage: number = 5;
+  hasMorePeople: boolean = true;
+  currentSearch = '';
+  loadingPeople: boolean = false; // Evita múltiplas requisições simultâneas
+
   constructor(
     public util: UtilService,
     private firebaseStorageService: FirebaseStorageService,
@@ -27,19 +32,49 @@ export class ListPeoplePage implements OnInit {
     this.getPeople();
   }
 
-  getPeople(): void {
-    this.peopleService.getPeoples().subscribe({
-      next: (response) => {
-        this.peopleList = response // Atribui os dados da pessoa à lista
-        this.peopleList.forEach(people => {
-          this.getImagemUrl(people); // Carrega e armazena a URL da imagem para cada pessoa
-        });
+  getPeople(reset = false): void {
+    if (reset) {
+      this.currentPage = 1;  // Reseta a paginação se for uma nova busca
+      this.peopleList = [];
+      this.hasMorePeople = true; // Habilita o carregamento de mais pessoas novamente
+    }
+
+    if (!this.hasMorePeople || this.loadingPeople) return; // Se não há mais pessoas ou já está carregando, não faz nada
+
+    this.loadingPeople = true; // Marca que está carregando
+
+    this.peopleService.getPeoples(this.currentPage, this.itemsPerPage, this.currentSearch).subscribe({
+      next: (response: People[]) => {
+        if (response.length < this.itemsPerPage) {
+          this.hasMorePeople = false; // Se o número de pessoas retornado for menor que o limite, não há mais para carregar
+        }
+        this.peopleList = [...this.peopleList, ...response]; // Adiciona os novos dados
+        this.peopleList.forEach((people) => this.getImagemUrl(people)); // Carrega as imagens
+        this.currentPage++;
+        this.loadingPeople = false; // Desmarca o carregamento
       },
       error: (error) => {
         console.error('Erro ao buscar usuários:', error);
         this.util.showToast('Erro ao carregar pessoas', 'danger', 'top');
-      }
+        this.loadingPeople = false; // Desmarca o carregamento mesmo com erro
+      },
     });
+  }
+
+  onSearch(event: any): void {
+    const searchTerm = event.target.value;
+    this.currentSearch = searchTerm.trim();
+    this.getPeople(true);  // Reinicia a busca e carrega a primeira página
+  }
+
+  // Carrega mais pessoas quando o usuário rolar a página
+  loadMorePeople(event: any): void {
+    if (!this.hasMorePeople || this.loadingPeople) {
+      event.target.complete(); // Finaliza o evento de scroll
+      return;
+    }
+    this.getPeople();
+    event.target.complete(); // Finaliza o evento de scroll
   }
 
   // Método para obter a URL da imagem com cache
@@ -67,8 +102,8 @@ export class ListPeoplePage implements OnInit {
   deletePeople(id: number): void {
     this.peopleService.deletePeople(id).subscribe(
       () => {
-        console.log('Pesoa excluído com sucesso!');
-        this.getPeople(); // Atualiza a lista de usuários após a exclusão
+        console.log('Pessoa excluída com sucesso!');
+        this.getPeople(true); // Atualiza a lista de usuários após a exclusão
       },
       error => {
         console.error('Erro ao excluir o usuário:', error);
@@ -79,14 +114,14 @@ export class ListPeoplePage implements OnInit {
   onPersonInfo(people: any) {
     const param: NavigationExtras = {
       queryParams: {
-        people: JSON.stringify(people)  // Serializa corretamente o objeto
-      }
+        people: JSON.stringify(people), // Serializa corretamente o objeto
+      },
     };
     this.util.navigateToPage('info-people', param);
   }
 
   getAvatarUrl(people: People): any {
-  // Verifica o gênero para definir a imagem padrão
+    // Verifica o gênero para definir a imagem padrão
     switch (people.gender) {
       case 'm':
         return 'assets/images/avatar/avatar-man.png'; // Avatar masculino
@@ -97,17 +132,12 @@ export class ListPeoplePage implements OnInit {
     }
   }
 
-
   // Função para abrir a página de cadastro
   openAddPersonPage() {
     this.util.navigateToPage('/add-people'); // Ajuste o caminho conforme necessário
   }
 
-
   editarPeople(people: People) {
-
-
+    // Função para edição de pessoas
   }
-
-
 }
