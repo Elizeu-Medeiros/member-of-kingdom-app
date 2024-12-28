@@ -3,7 +3,7 @@ import { AuthService } from './../../services/auth.service';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Route, Router } from '@angular/router';
-import { ToastController } from '@ionic/angular';
+import { ToastController, LoadingController } from '@ionic/angular';
 import { UtilService } from 'src/app/services/util.service';
 
 @Component({
@@ -21,6 +21,7 @@ export class LoginPage implements OnInit {
     private authService: AuthService,
     private formBuilder: FormBuilder,
     private router: Router,
+    private loadingController: LoadingController,
     private toastController: ToastController,
   ) {
     this.signinForm = this.formBuilder.group({
@@ -41,12 +42,12 @@ export class LoginPage implements OnInit {
       return;
     }
 
-    // const loading = await this.loadingController.create({
-    //   cssClass: 'default-loading',
-    //   message: '<p>Signing in...</p><span>Please be patient.</span>',
-    //   spinner: 'crescent'
-    // });
-    // await loading.present();
+    const loading = await this.loadingController.create({
+      cssClass: 'custom-loading',
+      spinner: null, // Desativando o spinner nativo
+      message: '', // Remova a mensagem para usar apenas a imagem
+    });
+    await loading.present();
 
     const { email, password } = this.signinForm.value;
 
@@ -54,7 +55,6 @@ export class LoginPage implements OnInit {
       next: async (response: any) => {
 
         await this.router.navigate(['/tabs']);
-        // loading.dismiss();
 
         const user = response.user;
         await this.presentToast('Success', `Bem-vindo de volta, ${user.name}!`, 'top', 'success', 2000);
@@ -62,12 +62,11 @@ export class LoginPage implements OnInit {
       },
       error: async (error) => {
         // Lida com erro de login
-        // loading.dismiss();
         await this.presentToast('Error', 'Falha no login. Tente novamente.', 'top', 'danger', 2000);
-
       },
       complete: () => {
         // Lógica final opcional
+        loading.dismiss();
       }
     });
   }

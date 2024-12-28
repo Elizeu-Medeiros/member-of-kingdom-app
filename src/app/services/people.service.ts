@@ -8,9 +8,9 @@ import { environment } from 'src/environments/environment';
   providedIn: 'root'
 })
 export class PeopleService {
-  private apiUrl = `${environment.apiUrl}/people`;  // URL da API Laravel
+  private readonly apiUrl = `${environment.apiUrl}/people`;  // URL da API Laravel
 
-  constructor(private http: HttpClient) { }
+  constructor(private readonly http: HttpClient) { }
 
   // Método para obter todos os usuários
   getPeoples(page: number, limit: number, name?: string): Observable<People[]> {

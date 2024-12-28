@@ -1,11 +1,7 @@
 <ion-header class="ion-no-border">
   <ion-toolbar mode="ios" color="light">
     <ion-title>Lista de Pessoas</ion-title>
-    <ion-buttons slot="end">
-      <ion-button (click)="openAddPersonPage()">
-        <ion-icon slot="icon-only" name="add-outline"></ion-icon>
-      </ion-button>
-    </ion-buttons>
+
   </ion-toolbar>
   <ion-toolbar mode="ios" color="light">
     <ion-searchbar placeholder="Nome" inputmode="text" type="text" mode="ios" (ionInput)="onSearch($event)" debounce="1000"></ion-searchbar>
@@ -39,4 +35,9 @@
       </ion-infinite-scroll-content>
     </ion-infinite-scroll>
   </div>
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button color="primary" (click)="openAddPersonPage()">
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
 </ion-content>

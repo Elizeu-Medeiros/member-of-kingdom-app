@@ -1,7 +1,7 @@
 import { People } from 'src/app/models/people.model';
 
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { Churches } from 'src/app/models/churches.model';
 import { ChurchesService } from 'src/app/services/churches.service';
 import { TypePeople } from 'src/app/models/typePeople.model';
@@ -11,6 +11,7 @@ import { Camera, CameraResultType, CameraSource, Photo } from '@capacitor/camera
 import { PeopleService } from 'src/app/services/people.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { FirebaseStorageService } from 'src/app/services/firebase-storage.service';
+import { PeopleStateService } from 'src/app/services/peopleState.service';
 
 
 @Component({
@@ -19,6 +20,7 @@ import { FirebaseStorageService } from 'src/app/services/firebase-storage.servic
   styleUrls: ['./add-person.page.scss'],
 })
 export class AddPersonPage implements OnInit {
+
 
   addPersonForm: FormGroup;
 
@@ -49,14 +51,14 @@ export class AddPersonPage implements OnInit {
   imagemFileName: string | undefined;
 
   constructor(
-    private router: Router,
-    private route: ActivatedRoute,
-    private typePeopleService: TypePeopleService,
-    private churchesService: ChurchesService,
-    private peopleService: PeopleService,
-    private fb: FormBuilder,
+    private readonly peopleStateService: PeopleStateService,
+    private readonly route: ActivatedRoute,
+    private readonly typePeopleService: TypePeopleService,
+    private readonly churchesService: ChurchesService,
+    private readonly peopleService: PeopleService,
+    private readonly fb: FormBuilder,
     public util: UtilService,
-    private firebaseStorageService: FirebaseStorageService
+    private readonly firebaseStorageService: FirebaseStorageService
   ) {
     this.addPersonForm = this.fb.group({
       name_full: ['', [Validators.required]],
@@ -74,27 +76,15 @@ export class AddPersonPage implements OnInit {
     this.getTypePerson();
     this.getChurches();
 
-    // Faz o download da imagem e obtém a URL
-    // this.firebaseStorageService.getImageDownloadUrl('images/1728324924333_image.jpg')
-    //   .subscribe(url => {
-    //     this.imageUrl = url;  // Armazena a URL da imagem no componente
-    //     // console.log('URL da Imagem:', this.imageUrl);
-    //   });
-
     // Recupera os dados da pessoa enviados pela rota
-    this.route.queryParams.subscribe(params => {
-      if (params['people']) {
-        try {
-          this.people = typeof params['people'] === 'string' ? JSON.parse(params['people']) : params['people'];
-          this.populateForm(this.people);
-          if (this.people.photo) {
-            this.getImageUrl(this.people.photo);
-          }
-        } catch (error) {
-          console.error('Erro ao fazer o parse do JSON:', error);
-        }
+    const selectedPerson = this.peopleStateService.selectedPerson;
+    if (selectedPerson) {
+      this.people = selectedPerson;
+      this.populateForm(selectedPerson);
+      if (selectedPerson.photo) {
+        this.getImageUrl(selectedPerson.photo);
       }
-    });
+    }
 
   }
 
@@ -116,7 +106,7 @@ export class AddPersonPage implements OnInit {
   }
 
   // Método para enviar o formulário
-  onSubmit() {
+  onSubmit(): void {
     if (this.addPersonForm.valid) {
       const formData = this.addPersonForm.value;
 
@@ -125,34 +115,32 @@ export class AddPersonPage implements OnInit {
       });
 
       if (this.people && this.people.uuid_people) {
-        // Se houver um ID, é uma atualização
-        this.peopleService.updatePeople(this.people.uuid_people, formData).subscribe(
-          response => {
+        this.peopleService.updatePeople(this.people.uuid_people, formData).subscribe({
+          next: (updatedPerson) => {
             this.util.showToast('Pessoa atualizada com sucesso!', 'success', 'bottom');
-            this.util.navigateToPage('/list-people');
+            console.info(updatedPerson.data);
+            this.peopleStateService.setSelectedPerson(updatedPerson.data);
+            this.util.navigateToPage('/info-people');
           },
-          error => {
+          error: (error) => {
             this.util.showToast('Erro ao atualizar pessoa', 'danger', 'top');
           }
-        );
+        });
       } else {
-        // Caso contrário, é uma criação
-        this.peopleService.createPeople(formData).subscribe(
-          response => {
+        this.peopleService.createPeople(formData).subscribe({
+          next: (response) => {
             this.util.showToast('Pessoa criada com sucesso!', 'success', 'bottom');
-            this.util.navigateToPage('/lis-people');
-            // this.onBack();
+            this.onBack(); // Navega para a lista
           },
-          error => {
+          error: (error) => {
             this.util.showToast('Erro ao criar pessoa', 'danger', 'top');
           }
-        );
+        });
       }
     } else {
       this.util.showToast('Por favor, preencha todos os campos obrigatórios', 'danger', 'top');
     }
   }
-
 
   async captureAndUpload() {
     const image: Photo = await Camera.getPhoto({
@@ -205,25 +193,6 @@ export class AddPersonPage implements OnInit {
     }
   }
 
-
-  // Método de upload genérico
-  // async uploadImage(imagePath: string) {
-  //   const response = await fetch(imagePath);
-  //   const blob = await response.blob();
-
-  //   const fileName = `images/${new Date().getTime()}_image.jpg`;
-
-  //   this.addPersonForm.patchValue({
-  //     photo: fileName,
-  //   });
-
-  //   this.firebaseStorageService.uploadImage(fileName, new File([blob], fileName))
-  //     .subscribe(url => {
-  //       this.imageUrl = url; // Armazena a URL da imagem
-  //       // this.addPersonForm.patchValue({ photo: url }); // Atualiza o campo 'photo' com a URL no formulário
-  //       console.log('URL da imagem salva no formulário:', url);
-  //     });
-  // }
   async uploadImage(imagePath: string) {
     try {
       // Comprime a imagem antes de enviá-la

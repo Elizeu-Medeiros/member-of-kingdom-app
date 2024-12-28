@@ -4,6 +4,7 @@ import { People } from 'src/app/models/people.model';
 import { FirebaseStorageService } from 'src/app/services/firebase-storage.service';
 import { PeopleService } from 'src/app/services/people.service';
 import { UtilService } from 'src/app/services/util.service';
+import { PeopleStateService } from '../../../services/peopleState.service';
 
 @Component({
   selector: 'app-list-people',
@@ -24,17 +25,27 @@ export class ListPeoplePage implements OnInit {
 
   constructor(
     public util: UtilService,
-    private firebaseStorageService: FirebaseStorageService,
-    private peopleService: PeopleService
+    private readonly firebaseStorageService: FirebaseStorageService,
+    private readonly peopleService: PeopleService,
+    private readonly peopleStateService: PeopleStateService,
   ) { }
 
   ngOnInit(): void {
     this.getPeople();
   }
 
+  ionViewWillEnter(): void {
+    this.getPeople(true);
+  }
+
+  ionViewDidEnter(): void {
+    console.log('ionViewDidEnter chamado - atualizando lista de pessoas');
+    this.getPeople(true);
+  }
+
   getPeople(reset = false): void {
     if (reset) {
-      this.currentPage = 1;  // Reseta a paginação se for uma nova busca
+      this.currentPage = 1; // Reseta a paginação se for uma nova busca
       this.peopleList = [];
       this.hasMorePeople = true; // Habilita o carregamento de mais pessoas novamente
     }
@@ -60,7 +71,6 @@ export class ListPeoplePage implements OnInit {
       },
     });
   }
-
   onSearch(event: any): void {
     const searchTerm = event.target.value;
     this.currentSearch = searchTerm.trim();
@@ -100,24 +110,21 @@ export class ListPeoplePage implements OnInit {
   }
 
   deletePeople(id: number): void {
-    this.peopleService.deletePeople(id).subscribe(
-      () => {
+    this.peopleService.deletePeople(id).subscribe({
+      next: () => {
         console.log('Pessoa excluída com sucesso!');
         this.getPeople(true); // Atualiza a lista de usuários após a exclusão
       },
-      error => {
+      error: (error) => {
         console.error('Erro ao excluir o usuário:', error);
       }
-    );
+    });
   }
 
   onPersonInfo(people: any) {
-    const param: NavigationExtras = {
-      queryParams: {
-        people: JSON.stringify(people), // Serializa corretamente o objeto
-      },
-    };
-    this.util.navigateToPage('info-people', param);
+    console.info("setSelectedPerson :", people);
+    this.peopleStateService.setSelectedPerson(people);
+    this.util.navigateToPage('info-people');
   }
 
   getAvatarUrl(people: People): any {
@@ -134,6 +141,7 @@ export class ListPeoplePage implements OnInit {
 
   // Função para abrir a página de cadastro
   openAddPersonPage() {
+    this.peopleStateService.clearSelectedPerson();
     this.util.navigateToPage('/add-people'); // Ajuste o caminho conforme necessário
   }
 
