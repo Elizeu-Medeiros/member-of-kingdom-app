@@ -1,0 +1,15 @@
+.logo-content {
+  display: flex;
+  justify-content: center; /* Centraliza horizontalmente */
+  align-items: center; /* Centraliza verticalmente */
+  height: 150px; /* Altura do contêiner */
+  margin: 20px auto; /* Margem para adicionar espaço ao redor */
+}
+
+.logo-content img {
+  max-width: 100%; /* Faz a imagem se ajustar à largura do contêiner */
+  max-height: 100%; /* Faz a imagem se ajustar à altura do contêiner */
+  object-fit: contain; /* Mantém a proporção da imagem */
+  height: auto; /* Garante que a altura da imagem seja ajustada automaticamente */
+  width: auto; /* Garante que a largura da imagem seja ajustada automaticamente */
+}

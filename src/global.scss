@@ -2581,3 +2581,13 @@ ion-modal.success-modal {
     margin: 20px 0px;
   }
 }
+
+.custom-loading::after {
+  content: '';
+  display: block;
+  background: url('assets/images/images/loading.gif') no-repeat center;
+  background-size: contain;
+  width: 100px;
+  height: 100px;
+  margin: 0 auto;
+}

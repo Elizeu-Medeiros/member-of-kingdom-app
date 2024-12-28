@@ -1,12 +1,12 @@
-
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Observable, of, tap } from 'rxjs';
+import { Subject, takeUntil } from 'rxjs';
 import { People } from 'src/app/models/people.model';
 import { FirebaseStorageService } from 'src/app/services/firebase-storage.service';
 import { UtilService } from 'src/app/services/util.service';
 import * as L from 'leaflet';
 import { GeocodingService } from 'src/app/services/geocoding.service';
+import { PeopleStateService } from '../../../services/peopleState.service';
 
 @Component({
   selector: 'app-info-people',
@@ -15,40 +15,59 @@ import { GeocodingService } from 'src/app/services/geocoding.service';
 })
 export class InfoPeoplePage implements OnInit {
 
-  public people: any;
+  public selectedPerson: People | null = null;
+  private readonly destroy$ = new Subject<void>();
   imageCache: { [key: string]: string } = {};
 
   map: L.Map | undefined;
 
-
   constructor(
     public util: UtilService,
-    private firebaseStorageService: FirebaseStorageService,
-    private geocodingService: GeocodingService,
-    private route: ActivatedRoute
+    private readonly firebaseStorageService: FirebaseStorageService,
+    private readonly geocodingService: GeocodingService,
+    private readonly route: ActivatedRoute,
+    private readonly peopleStateService: PeopleStateService,
   ) { }
 
-  ngOnInit() {
-    this.route.queryParams.subscribe(params => {
-      if (params['people']) {
-        try {
-          // Certifica-se de que o valor seja uma string JSON antes de fazer o parse
-          this.people = typeof params['people'] === 'string' ? JSON.parse(params['people']) : params['people'];
-          console.log(this.people);  // Verifica se o objeto 'people' foi recuperado corretamente
-
-          // Depois de carregar o objeto 'people', obter a URL da imagem
-          this.getImagemUrl(this.people);
-
-        } catch (error) {
-          console.error('Erro ao fazer o parse do JSON:', error);
+  ngOnInit(): void {
+    this.peopleStateService.selectedPerson$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((person) => {
+        if (person) {
+          this.selectedPerson = person;
+          this.loadImageUrl(this.selectedPerson);
+        } else {
+          console.warn('Nenhuma pessoa selecionada.');
         }
-      }
-    });
-
-    // this.geocodeAndLoadMap('Manoel Olimpio de Ceia, Viaduto, Araruama');
-
+      });
   }
 
+  ionViewWillEnter(): void {
+    // Atualiza os dados do estado ao retornar à página
+    const updatedPerson = this.peopleStateService.selectedPerson;
+    if (updatedPerson) {
+      this.selectedPerson = updatedPerson;
+      this.loadImageUrl(this.selectedPerson);
+    } else {
+      console.warn('Nenhuma pessoa encontrada no estado.');
+    }
+  }
+
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
+  loadImageUrl(person: People): void {
+    if (person.photo) {
+      this.firebaseStorageService.getImageDownloadUrl(person.photo).subscribe((url) => {
+        person.photoUrl = url;
+      });
+    } else {
+      person.photoUrl = 'assets/images/avatar/default-avatar.png';
+    }
+  }
 
   ngAfterViewInit() {
     // Inicialize o mapa após a visualização ser carregada
@@ -120,13 +139,8 @@ export class InfoPeoplePage implements OnInit {
     }
   }
 
-  onEditProfile(people: People) {
-    const param = {
-      queryParams: {
-        people: JSON.stringify(people)
-      }
-    };
-    this.util.navigateToPage('/add-people', param);
+  onEditProfile(people: People | null): void {
+    this.util.navigateToPage('/add-people');
   }
 
   onWhatsApp() {
@@ -136,7 +150,8 @@ export class InfoPeoplePage implements OnInit {
   onQrCode() { }
 
   onBack() {
-    this.util.onBack();
+    // this.util.onBack();
+    this.util.navigateToPage('tabs/people');
   }
 
   onBook() {

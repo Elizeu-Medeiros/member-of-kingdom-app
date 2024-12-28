@@ -1,14 +1,10 @@
 <ion-header class="ion-no-border">
   <ion-toolbar mode="ios" color="light">
     <ion-title>Lista de Pessoas</ion-title>
-    <ion-buttons slot="end">
-      <ion-button (click)="openAddPersonPage()">
-        <ion-icon slot="icon-only" name="add-outline"></ion-icon>
-      </ion-button>
-    </ion-buttons>
+
   </ion-toolbar>
   <ion-toolbar mode="ios" color="light">
-    <ion-searchbar placeholder="Name, Categories" inputmode="text" type="text" mode="ios"></ion-searchbar>
+    <ion-searchbar placeholder="Nome" inputmode="text" type="text" mode="ios" (ionInput)="onSearch($event)" debounce="1000"></ion-searchbar>
   </ion-toolbar>
 </ion-header>
 <ion-content class="ion-padding">
@@ -19,9 +15,9 @@
         <ion-col size="3">
           <img [src]="people.photoUrl" alt="Imagem Carregada" class="doc-cover" />
           <div class="name-content">
-          <div class="status">
-            <span *ngIf="people.type_people?.type_people_name === 'Membro'" class="green">Membro</span>
-            <span *ngIf="people.type_people?.type_people_name === 'Visitante'" class="yello">Visitante</span>
+            <div class="status">
+              <span *ngIf="people.type_people?.type_people_name === 'Membro'" class="green">Membro</span>
+              <span *ngIf="people.type_people?.type_people_name === 'Visitante'" class="yello">Visitante</span>
             </div>
           </div>
         </ion-col>
@@ -34,5 +30,14 @@
         </ion-col>
       </ion-row>
     </ion-card>
+    <ion-infinite-scroll threshold="100px" (ionInfinite)="loadMorePeople($event)" *ngIf="hasMorePeople">
+      <ion-infinite-scroll-content loadingSpinner="bubbles" loadingText="Carregando mais...">
+      </ion-infinite-scroll-content>
+    </ion-infinite-scroll>
   </div>
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button color="primary" (click)="openAddPersonPage()">
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
 </ion-content>

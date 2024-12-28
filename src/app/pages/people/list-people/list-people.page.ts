@@ -1,10 +1,10 @@
-
 import { Component, OnInit } from '@angular/core';
 import { NavigationExtras } from '@angular/router';
 import { People } from 'src/app/models/people.model';
 import { FirebaseStorageService } from 'src/app/services/firebase-storage.service';
 import { PeopleService } from 'src/app/services/people.service';
 import { UtilService } from 'src/app/services/util.service';
+import { PeopleStateService } from '../../../services/peopleState.service';
 
 @Component({
   selector: 'app-list-people',
@@ -17,29 +17,74 @@ export class ListPeoplePage implements OnInit {
 
   imageCache: { [key: string]: string } = {};
 
+  currentPage: number = 1;
+  itemsPerPage: number = 5;
+  hasMorePeople: boolean = true;
+  currentSearch = '';
+  loadingPeople: boolean = false; // Evita múltiplas requisições simultâneas
+
   constructor(
     public util: UtilService,
-    private firebaseStorageService: FirebaseStorageService,
-    private peopleService: PeopleService
+    private readonly firebaseStorageService: FirebaseStorageService,
+    private readonly peopleService: PeopleService,
+    private readonly peopleStateService: PeopleStateService,
   ) { }
 
   ngOnInit(): void {
     this.getPeople();
   }
 
-  getPeople(): void {
-    this.peopleService.getPeoples().subscribe({
-      next: (response) => {
-        this.peopleList = response; // Atribui os dados da pessoa à lista
-        this.peopleList.forEach(people => {
-          this.getImagemUrl(people); // Carrega e armazena a URL da imagem para cada pessoa
-        });
+  ionViewWillEnter(): void {
+    this.getPeople(true);
+  }
+
+  ionViewDidEnter(): void {
+    console.log('ionViewDidEnter chamado - atualizando lista de pessoas');
+    this.getPeople(true);
+  }
+
+  getPeople(reset = false): void {
+    if (reset) {
+      this.currentPage = 1; // Reseta a paginação se for uma nova busca
+      this.peopleList = [];
+      this.hasMorePeople = true; // Habilita o carregamento de mais pessoas novamente
+    }
+
+    if (!this.hasMorePeople || this.loadingPeople) return; // Se não há mais pessoas ou já está carregando, não faz nada
+
+    this.loadingPeople = true; // Marca que está carregando
+
+    this.peopleService.getPeoples(this.currentPage, this.itemsPerPage, this.currentSearch).subscribe({
+      next: (response: People[]) => {
+        if (response.length < this.itemsPerPage) {
+          this.hasMorePeople = false; // Se o número de pessoas retornado for menor que o limite, não há mais para carregar
+        }
+        this.peopleList = [...this.peopleList, ...response]; // Adiciona os novos dados
+        this.peopleList.forEach((people) => this.getImagemUrl(people)); // Carrega as imagens
+        this.currentPage++;
+        this.loadingPeople = false; // Desmarca o carregamento
       },
       error: (error) => {
         console.error('Erro ao buscar usuários:', error);
         this.util.showToast('Erro ao carregar pessoas', 'danger', 'top');
-      }
+        this.loadingPeople = false; // Desmarca o carregamento mesmo com erro
+      },
     });
+  }
+  onSearch(event: any): void {
+    const searchTerm = event.target.value;
+    this.currentSearch = searchTerm.trim();
+    this.getPeople(true);  // Reinicia a busca e carrega a primeira página
+  }
+
+  // Carrega mais pessoas quando o usuário rolar a página
+  loadMorePeople(event: any): void {
+    if (!this.hasMorePeople || this.loadingPeople) {
+      event.target.complete(); // Finaliza o evento de scroll
+      return;
+    }
+    this.getPeople();
+    event.target.complete(); // Finaliza o evento de scroll
   }
 
   // Método para obter a URL da imagem com cache
@@ -65,28 +110,25 @@ export class ListPeoplePage implements OnInit {
   }
 
   deletePeople(id: number): void {
-    this.peopleService.deletePeople(id).subscribe(
-      () => {
-        console.log('Pesoa excluído com sucesso!');
-        this.getPeople(); // Atualiza a lista de usuários após a exclusão
+    this.peopleService.deletePeople(id).subscribe({
+      next: () => {
+        console.log('Pessoa excluída com sucesso!');
+        this.getPeople(true); // Atualiza a lista de usuários após a exclusão
       },
-      error => {
+      error: (error) => {
         console.error('Erro ao excluir o usuário:', error);
       }
-    );
+    });
   }
 
   onPersonInfo(people: any) {
-    const param: NavigationExtras = {
-      queryParams: {
-        people: JSON.stringify(people)  // Serializa corretamente o objeto
-      }
-    };
-    this.util.navigateToPage('info-people', param);
+    console.info("setSelectedPerson :", people);
+    this.peopleStateService.setSelectedPerson(people);
+    this.util.navigateToPage('info-people');
   }
 
   getAvatarUrl(people: People): any {
-  // Verifica o gênero para definir a imagem padrão
+    // Verifica o gênero para definir a imagem padrão
     switch (people.gender) {
       case 'm':
         return 'assets/images/avatar/avatar-man.png'; // Avatar masculino
@@ -97,17 +139,13 @@ export class ListPeoplePage implements OnInit {
     }
   }
 
-
   // Função para abrir a página de cadastro
   openAddPersonPage() {
+    this.peopleStateService.clearSelectedPerson();
     this.util.navigateToPage('/add-people'); // Ajuste o caminho conforme necessário
   }
 
-
   editarPeople(people: People) {
-
-
+    // Função para edição de pessoas
   }
-
-
 }

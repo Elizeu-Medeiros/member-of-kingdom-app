@@ -8,14 +8,30 @@ import { environment } from 'src/environments/environment';
   providedIn: 'root'
 })
 export class PeopleService {
-  private apiUrl = `${environment.apiUrl}/people`;  // URL da API Laravel
+  private readonly apiUrl = `${environment.apiUrl}/people`;  // URL da API Laravel
 
-  constructor(private http: HttpClient) { }
+  constructor(private readonly http: HttpClient) { }
 
   // Método para obter todos os usuários
-  getPeoples(): Observable<People[]> {
-    return this.http.get<People[]>(this.apiUrl);
+  getPeoples(page: number, limit: number, name?: string): Observable<People[]> {
+    let params: any = { page, limit };
+
+    if (name) {
+      params.name = name;
+    }
+
+    return this.http.get<PeoplesResponse>(this.apiUrl, { params }).pipe(
+      map((response: PeoplesResponse) => {
+        // Se a resposta tiver um array `data`, retornamos, senão, um array vazio
+        return response?.data ?? [];
+      }),
+      catchError((error: HttpErrorResponse) => {
+        console.error('Erro ao buscar pessoas:', error);
+        return throwError(() => new Error('Erro ao buscar pessoas. Tente novamente mais tarde.'));
+      })
+    );
   }
+
 
   // Método para obter um usuário específico por ID
   getPeople(id: number): Observable<People> {

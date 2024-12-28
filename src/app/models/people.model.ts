@@ -1,4 +1,4 @@
-import { Churches } from "./churches.model";
+import { Members } from "./member.model";
 import { TypePeople } from "./typePeople.model";
 import { User } from "./user.model";
 
@@ -14,11 +14,11 @@ export interface People {
   photo?: string;
   birth_date?: string,
   gender?: 'm' | 'f' | string,
+  photoUrl?: string,
   church_id?: string,
   type_people?: TypePeople,
-  church?: Churches,
-  user?: User
-  photoUrl?: string;
+  member?: Members,
+  user?: User,
 }
 
 export interface PeoplesResponse {

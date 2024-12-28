@@ -1,7 +1,7 @@
 import { People } from 'src/app/models/people.model';
 
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { Churches } from 'src/app/models/churches.model';
 import { ChurchesService } from 'src/app/services/churches.service';
 import { TypePeople } from 'src/app/models/typePeople.model';
@@ -11,6 +11,7 @@ import { Camera, CameraResultType, CameraSource, Photo } from '@capacitor/camera
 import { PeopleService } from 'src/app/services/people.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { FirebaseStorageService } from 'src/app/services/firebase-storage.service';
+import { PeopleStateService } from 'src/app/services/peopleState.service';
 
 
 @Component({
@@ -19,6 +20,7 @@ import { FirebaseStorageService } from 'src/app/services/firebase-storage.servic
   styleUrls: ['./add-person.page.scss'],
 })
 export class AddPersonPage implements OnInit {
+
 
   addPersonForm: FormGroup;
 
@@ -46,20 +48,22 @@ export class AddPersonPage implements OnInit {
   selectedImage: string | undefined;
 
   imageUrl: string | undefined;
+  imagemFileName: string | undefined;
 
   constructor(
-    private router: Router,
-    private route: ActivatedRoute,
-    private typePeopleService: TypePeopleService,
-    private churchesService: ChurchesService,
-    private peopleService: PeopleService,
-    private fb: FormBuilder,
+    private readonly peopleStateService: PeopleStateService,
+    private readonly route: ActivatedRoute,
+    private readonly typePeopleService: TypePeopleService,
+    private readonly churchesService: ChurchesService,
+    private readonly peopleService: PeopleService,
+    private readonly fb: FormBuilder,
     public util: UtilService,
-    private firebaseStorageService: FirebaseStorageService
+    private readonly firebaseStorageService: FirebaseStorageService
   ) {
     this.addPersonForm = this.fb.group({
       name_full: ['', [Validators.required]],
       type_people_id: ['', [Validators.required]],
+      member_id: [''],
       church_id: [''],
       cell_phone: ['', [Validators.pattern('^[0-9]{10,11}$')]],
       gender: [''],
@@ -72,27 +76,15 @@ export class AddPersonPage implements OnInit {
     this.getTypePerson();
     this.getChurches();
 
-    // Faz o download da imagem e obtém a URL
-    this.firebaseStorageService.getImageDownloadUrl('images/1728324924333_image.jpg')
-      .subscribe(url => {
-        this.imageUrl = url;  // Armazena a URL da imagem no componente
-        // console.log('URL da Imagem:', this.imageUrl);
-      });
-
     // Recupera os dados da pessoa enviados pela rota
-    this.route.queryParams.subscribe(params => {
-      if (params['people']) {
-        try {
-          this.people = typeof params['people'] === 'string' ? JSON.parse(params['people']) : params['people'];
-          this.populateForm(this.people);
-          if (this.people.photo) {
-            this.getImageUrl(this.people.photo);
-          }
-        } catch (error) {
-          console.error('Erro ao fazer o parse do JSON:', error);
-        }
+    const selectedPerson = this.peopleStateService.selectedPerson;
+    if (selectedPerson) {
+      this.people = selectedPerson;
+      this.populateForm(selectedPerson);
+      if (selectedPerson.photo) {
+        this.getImageUrl(selectedPerson.photo);
       }
-    });
+    }
 
   }
 
@@ -103,6 +95,8 @@ export class AddPersonPage implements OnInit {
         uuid_people: people.uuid_people,
         name_full: people.name_full,
         type_people_id: people.type_people?.uuid_type_people,
+        member_id: people.member?.uuid_member,
+        church_id: people.member?.church?.uuid_church,
         cell_phone: people.cell_phone,
         birth_date: people.birth_date,
         gender: people.gender,
@@ -112,39 +106,41 @@ export class AddPersonPage implements OnInit {
   }
 
   // Método para enviar o formulário
-  onSubmit() {
+  onSubmit(): void {
     if (this.addPersonForm.valid) {
       const formData = this.addPersonForm.value;
 
+      this.addPersonForm.patchValue({
+        photo: this.imagemFileName,
+      });
+
       if (this.people && this.people.uuid_people) {
-        // Se houver um ID, é uma atualização
-        this.peopleService.updatePeople(this.people.uuid_people, formData).subscribe(
-          response => {
+        this.peopleService.updatePeople(this.people.uuid_people, formData).subscribe({
+          next: (updatedPerson) => {
             this.util.showToast('Pessoa atualizada com sucesso!', 'success', 'bottom');
+            console.info(updatedPerson.data);
+            this.peopleStateService.setSelectedPerson(updatedPerson.data);
             this.util.navigateToPage('/info-people');
           },
-          error => {
+          error: (error) => {
             this.util.showToast('Erro ao atualizar pessoa', 'danger', 'top');
           }
-        );
+        });
       } else {
-        // Caso contrário, é uma criação
-        this.peopleService.createPeople(formData).subscribe(
-          response => {
+        this.peopleService.createPeople(formData).subscribe({
+          next: (response) => {
             this.util.showToast('Pessoa criada com sucesso!', 'success', 'bottom');
-            // this.util.navigateToPage('/lis-people');
-            this.onBack();
+            this.onBack(); // Navega para a lista
           },
-          error => {
+          error: (error) => {
             this.util.showToast('Erro ao criar pessoa', 'danger', 'top');
           }
-        );
+        });
       }
     } else {
       this.util.showToast('Por favor, preencha todos os campos obrigatórios', 'danger', 'top');
     }
   }
-
 
   async captureAndUpload() {
     const image: Photo = await Camera.getPhoto({
@@ -158,6 +154,9 @@ export class AddPersonPage implements OnInit {
       const blob = await response.blob();
       const fileName = `images/${new Date().getTime()}_image.jpg`;
 
+      this.addPersonForm.patchValue({
+        photo: fileName,
+      });
       // Faz o upload da imagem e obtém a URL
       this.firebaseStorageService.uploadImage(fileName, new File([blob], fileName))
         .subscribe(url => {
@@ -176,9 +175,10 @@ export class AddPersonPage implements OnInit {
     });
 
     if (image.webPath) {
-      this.uploadImage(image.webPath);
+      await this.uploadImage(image.webPath);
     }
   }
+
 
   // Método para selecionar imagem da galeria
   async selectFromGallery() {
@@ -189,30 +189,35 @@ export class AddPersonPage implements OnInit {
     });
 
     if (image.webPath) {
-      this.uploadImage(image.webPath);
+      await this.uploadImage(image.webPath);
     }
   }
 
-  // Método de upload genérico
   async uploadImage(imagePath: string) {
-    const response = await fetch(imagePath);
-    const blob = await response.blob();
+    try {
+      // Comprime a imagem antes de enviá-la
+      const compressedBlob = await this.compressImage(imagePath);
 
-    const fileName = `images/${new Date().getTime()}_image.jpg`;
-    this.firebaseStorageService.uploadImage(fileName, new File([blob], fileName))
-      .subscribe(url => {
-        this.imageUrl = url; // Armazena a URL da imagem
-        this.addPersonForm.patchValue({ photo: url }); // Atualiza o campo 'photo' com a URL no formulário
-        console.log('URL da imagem salva no formulário:', url);
-      });
+      const fileName = `images/${new Date().getTime()}_image.jpg`;
+      this.firebaseStorageService.uploadImage(fileName, new File([compressedBlob], fileName))
+        .subscribe(url => {
+          this.imageUrl = url; // Armazena a URL da imagem
+          this.addPersonForm.patchValue({ photo: fileName }); // Atualiza o campo 'photo' com o caminho no formulário
+          console.log('URL da imagem salva no formulário:', fileName);
+        });
+    } catch (error) {
+      console.error('Erro ao comprimir e fazer upload da imagem:', error);
+    }
   }
 
+
   getImageUrl(imagemUrl: string) {
+    this.imagemFileName = imagemUrl;
     // Faz o download da imagem e obtém a URL
     this.firebaseStorageService.getImageDownloadUrl(imagemUrl)
       .subscribe(url => {
         this.imageUrl = url;  // Armazena a URL da imagem no componente
-  // console.log('URL da Imagem:', this.imageUrl);
+        // console.log('URL da Imagem:', this.imageUrl);
       });
   }
 
@@ -240,6 +245,46 @@ export class AddPersonPage implements OnInit {
         console.error('Erro ao carregar igrejas:', error);
         this.util.showToast('Erro ao carregar igrejas', 'danger', 'top');
       }
+    });
+  }
+
+  async compressImage(imagePath: string, maxWidth: number = 800, maxHeight: number = 800, quality: number = 0.7): Promise<Blob> {
+    const img = new Image();
+    img.src = imagePath;
+
+    return new Promise<Blob>((resolve, reject) => {
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        let width = img.width;
+        let height = img.height;
+
+        // Mantém a proporção da imagem
+        if (width > maxWidth) {
+          height = Math.round((maxWidth / width) * height);
+          width = maxWidth;
+        }
+        if (height > maxHeight) {
+          width = Math.round((maxHeight / height) * width);
+          height = maxHeight;
+        }
+
+        canvas.width = width;
+        canvas.height = height;
+
+        const ctx = canvas.getContext('2d');
+        ctx?.drawImage(img, 0, 0, width, height);
+
+        // Converte o canvas em um blob comprimido
+        canvas.toBlob((blob) => {
+          if (blob) {
+            resolve(blob);
+          } else {
+            reject(new Error('Erro ao comprimir imagem'));
+          }
+        }, 'image/jpeg', quality); // Define o formato da imagem e a qualidade (0 a 1)
+      };
+
+      img.onerror = reject;
     });
   }
 
