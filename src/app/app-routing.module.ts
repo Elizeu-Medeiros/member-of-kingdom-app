@@ -135,7 +135,11 @@ const routes: Routes = [
   {
     path: 'write-review',
     loadChildren: () => import('./pages/write-review/write-review.module').then(m => m.WriteReviewPageModule)
-  }
+  },
+  {
+    path: 'users',
+    loadComponent: () => import('./pages/users/users.page').then(m => m.UsersPage)
+  },
 ];
 @NgModule({
   imports: [

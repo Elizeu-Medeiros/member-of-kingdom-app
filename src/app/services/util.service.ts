@@ -419,7 +419,6 @@ export class UtilService {
 
   navigateToPage(routes: any, param?: NavigationExtras | undefined) {
     this.zone.run(() => {
-      console.log(routes, param);
       this.router.navigate([routes], param);
     });
   }
