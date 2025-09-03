@@ -101,6 +101,19 @@ const routes: Routes = [
         ]
       },
       {
+        path: 'users',
+        children: [
+          {
+            path: '',
+            loadChildren: () => import('../users/users.module').then(m => m.UsersPageModule)
+          },
+          {
+            path: 'user-details',
+            loadChildren: () => import('../users/users.module').then(m => m.UsersPageModule)
+          },
+        ]
+      },
+      {
         path: '',
         redirectTo: '/tabs/home',
         pathMatch: 'full'

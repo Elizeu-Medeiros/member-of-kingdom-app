@@ -1,0 +1,13 @@
+.sentinel { height: 1px; }
+
+.list-quick-actions ion-button { margin-left: 4px; }
+
+.avatar {
+  width: 40px; height: 40px;
+  background: var(--ion-color-step-150);
+  display: inline-flex; align-items: center; justify-content: center;
+  font-weight: 700; color: var(--ion-color-primary); text-transform: uppercase;
+}
+.name { font-weight: 600; display: flex; align-items: center; gap: 6px; }
+.email { opacity: .7; }
+.ml-1 { margin-left: 6px; }

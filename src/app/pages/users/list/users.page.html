@@ -1,0 +1,79 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar mode="ios" color="light">
+    <ion-title>Lista de Usuários</ion-title>
+
+    <!-- Botão CADASTRAR (novo) no header -->
+    <ion-buttons slot="end">
+      <ion-button (click)="onCreate()">
+        <ion-icon name="person-add-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+
+  <!-- Barra de busca (corrigido: use ionInput, não ionRefresh) -->
+  <ion-toolbar mode="ios" color="light">
+    <ion-searchbar placeholder="Nome, Email" inputmode="text" type="text" mode="ios" animated debounce="300"
+      (ionInput)="onSearch($event)" (ionClear)="onSearchCleared()">
+    </ion-searchbar>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <!-- Pull to refresh -->
+  <ion-refresher slot="fixed" (ionRefresh)="onRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  <!-- Skeleton 1ª página -->
+  <ion-list *ngIf="loading">
+    <ion-item *ngFor="let s of [0,1,2,3,4]">
+      <ion-avatar slot="start">
+        <ion-skeleton-text animated style="width:40px;height:40px;border-radius:50%"></ion-skeleton-text>
+      </ion-avatar>
+      <ion-label>
+        <h3><ion-skeleton-text animated style="width:60%"></ion-skeleton-text></h3>
+        <p><ion-skeleton-text animated style="width:40%"></ion-skeleton-text></p>
+      </ion-label>
+    </ion-item>
+  </ion-list>
+
+  <!-- Lista real com ações rápidas (clique abre detalhes; swipe edita/exclui) -->
+  <ion-list *ngIf="!loading">
+    <ion-item-sliding *ngFor="let u of users; trackBy: trackById">
+      <ion-item button detail (click)="goToDetails(u)">
+        <ion-avatar slot="start" class="avatar">
+          <ion-text>{{ getInitials(u.name) }}</ion-text>
+        </ion-avatar>
+
+        <ion-label>
+          <h2 class="name">{{ u.name }}</h2>
+          <p class="email">{{ u.email }}</p>
+        </ion-label>
+
+      </ion-item>
+
+      <!-- Ações por swipe -->
+      <ion-item-options side="start">
+        <ion-item-option color="medium" (click)="onEdit(u)">Editar</ion-item-option>
+      </ion-item-options>
+      <ion-item-options side="end">
+        <ion-item-option color="danger" (click)="onDelete(u)">Excluir</ion-item-option>
+      </ion-item-options>
+    </ion-item-sliding>
+  </ion-list>
+
+  <!-- Estado vazio -->
+  <div class="ion-text-center ion-padding" *ngIf="!loading && users.length === 0">
+    Nenhum usuário encontrado
+  </div>
+
+  <!-- Sentinela do infinite (IntersectionObserver) -->
+  <div #sentinel class="sentinel"></div>
+
+  <!-- FAB de cadastro (opção estilo Android) -->
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button (click)="onCreate()">
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+</ion-content>
