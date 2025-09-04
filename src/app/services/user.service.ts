@@ -31,18 +31,18 @@ export class UserService {
   }
 
   // Método para atualizar um usuário existente
-  updateUser(id: number, user: User): Observable<User> {
-    return this.http.put<User>(`${this.apiUrl}/${id}`, user);
+  updateUser(id: number, payload: Partial<User> & { password_confirmation?: string }): Observable<ApiResponse<User>> {
+    return this.http.put<ApiResponse<User>>(`${this.apiUrl}/${id}`, payload);
   }
 
   // Método para excluir um usuário por ID
   deleteUser(id: number): Observable<void> { return this.http.delete<void>(`${this.apiUrl}/${id}`); }
 
   getUsersPage(page = 1, search = '', perPage = 10) {
-  let params = new HttpParams().set('page', page).set('per_page', perPage);
-  if (search) params = params.set('search', search);
-  return this.http
-    .get<ApiResponse<Paginated<User>>>(this.apiUrl, { params })
-    .pipe(map(res => res.data)); // wrapper {message, data}
-}
+    let params = new HttpParams().set('page', page).set('per_page', perPage);
+    if (search) params = params.set('search', search);
+    return this.http
+      .get<ApiResponse<Paginated<User>>>(this.apiUrl, { params })
+      .pipe(map(res => res.data)); // wrapper {message, data}
+  }
 }

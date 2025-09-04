@@ -1,11 +1,12 @@
 // user-details.page.ts
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, NgZone, OnInit, ViewChild, ɵNoopNgZone } from '@angular/core';
 import { Router } from '@angular/router';
 import { UtilService } from 'src/app/services/util.service';
 import { Role, User } from 'src/app/models/user.model';
 import { RolesService } from 'src/app/services/role.service';
 import { UserService } from 'src/app/services/user.service';
-import { IonModal, RadioGroupChangeEventDetail, SelectChangeEventDetail } from '@ionic/angular';
+import { IonModal, RadioGroupChangeEventDetail, SelectChangeEventDetail, ToastController } from '@ionic/angular';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-user-details',
@@ -31,6 +32,9 @@ export class UserDetailsPage implements OnInit {
     private router: Router,
     private roleService: RolesService,
     private userService: UserService,
+    private cdr: ChangeDetectorRef,
+    private ngZone: NgZone,
+    private toastCtrl: ToastController,
   ) { }
 
   ngOnInit() {
@@ -53,7 +57,7 @@ export class UserDetailsPage implements OnInit {
 
     this.user = data;
     this.isEdit = true; // veio com dados => edição
-
+    console.log("Usuário => ", this.user);
     // limpa pra não reaproveitar sem querer numa navegação diferente
     sessionStorage.removeItem('user_edit');
 
@@ -78,17 +82,50 @@ export class UserDetailsPage implements OnInit {
   // chamado no (ionChange) do select
   // Ionic 6/7: tipos dos eventos
 
-  private syncRoleOnUser(roleId: number | null) {
-    this.user.role_id = roleId;
-    const nextRole =
-      roleId != null ? this.roles.find(r => Number(r.id) === Number(roleId)) ?? null : null;
-    this.user.role = nextRole;
+  get selectedRoleName(): string {
+    return (
+      this.user?.role?.name ||
+      this.roles.find(r => Number(r.id) === Number(this.selectedRoleId))?.name ||
+      ''
+    );
   }
 
-  // Exemplo de salvar (update) enviando role_id
-  save() {
-    if (!this.user) return;
+  openRolePicker() {
+    this.rolesFiltered = this.roles;
+    this.tempSelectedRoleId = this.selectedRoleId ?? null;
+    this.roleModalOpen = true;
+  }
 
+  confirmRolePicker(id?: number) {
+    if (typeof id === 'number') this.tempSelectedRoleId = id;
+    this.selectedRoleId = this.tempSelectedRoleId;
+    this.syncRoleOnUser(this.selectedRoleId);
+    this.roleModalOpen = false;
+  }
+
+  closeRolePicker(commit = false) {
+    if (commit) {
+      this.selectedRoleId = this.tempSelectedRoleId;
+      this.syncRoleOnUser(this.selectedRoleId);
+    }
+    this.roleModalOpen = false;
+  }
+
+  onRoleRadioChange(ev: any) {
+    const val = ev?.detail?.value;
+    this.tempSelectedRoleId = val != null ? Number(val) : null;
+  }
+
+  private syncRoleOnUser(roleId: number | null) {
+    this.user.role_id = roleId;
+    this.user.role = roleId != null
+      ? (this.roles.find(r => Number(r.id) === Number(roleId)) ?? null)
+      : null;
+  }
+
+
+  // Exemplo de salvar (update) enviando role_id
+  async save() {
     const payload: any = {
       name: this.user.name,
       email: this.user.email,
@@ -100,15 +137,32 @@ export class UserDetailsPage implements OnInit {
     }
 
     this.userService.updateUser(this.user.id, payload).subscribe({
-      next: () => this.util.onBack(),
-      error: (e: any) => console.error(e),   // <<< tipado
+      next: async (res) => {
+        const msg = res?.message || 'Usuário atualizado com sucesso!';
+        const t = await this.toastCtrl.create({
+          message: msg,
+          duration: 2000,
+          color: 'success',
+          position: 'top',
+          icon: 'checkmark-circle',
+        });
+        await t.present();
+        // navega após o toast sumir (ou imediatamente, como preferir)
+        t.onDidDismiss().then(() => this.util.onBack());
+      },
+      error: async (err: HttpErrorResponse) => {
+        const msg = (err.error?.message as string) || 'Falha ao salvar usuário.';
+        const t = await this.toastCtrl.create({
+          message: msg,
+          duration: 2500,
+          color: 'danger',
+          position: 'top',
+          icon: 'alert-circle',
+        });
+        await t.present();
+      },
     });
   }
-
-
-
-
-
 
   roleColor(name: string): string {
     const n = (name || '').toLowerCase();
@@ -116,27 +170,6 @@ export class UserDetailsPage implements OnInit {
     if (n.includes('manager') || n.includes('gestor')) return 'warning';
     if (n.includes('viewer') || n.includes('user') || n.includes('cliente')) return 'medium';
     return 'primary';
-  }
-
-  openRolePicker() {
-    this.rolesFiltered = this.roles;
-    this.tempSelectedRoleId = this.selectedRoleId ?? null;
-    this.roleModalOpen = true;         // <<< abre modal
-  }
-
-  closeRolePicker() {
-    this.roleModalOpen = false;        // <<< fecha modal
-  }
-
-  confirmRolePicker() {
-    this.selectedRoleId = this.tempSelectedRoleId;
-    this.syncRoleOnUser(this.selectedRoleId);
-    this.roleModalOpen = false;
-  }
-
-  onRoleRadioChange(ev: Event | CustomEvent<RadioGroupChangeEventDetail>) {
-    const val = (ev as CustomEvent<RadioGroupChangeEventDetail>)?.detail?.value;
-    this.tempSelectedRoleId = val != null ? Number(val) : null;
   }
 
   onRoleSearch(ev: any) {

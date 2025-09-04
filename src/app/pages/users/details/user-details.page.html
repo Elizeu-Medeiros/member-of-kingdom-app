@@ -46,14 +46,16 @@
 
     </ion-item> -->
 
-    <ion-label class="lbl" position="inline">Papel</ion-label>
     <ion-item lines="none" class="item-content" button detail (click)="openRolePicker()">
-
-      <div>{{ user.role?.name ?? 'Selecione um papel' }}</div>
-      <ng-container *ngIf="user.role?.name as roleName">
+      <ion-label>
+        <div>{{ selectedRoleName || 'Selecione um papel' }}</div>
+        <ion-note *ngIf="user?.role?.description">{{ user.role?.description }}</ion-note>
+      </ion-label>
+      <ng-container *ngIf="selectedRoleName as roleName">
         <ion-badge [color]="roleColor(roleName)">{{ roleName }}</ion-badge>
       </ng-container>
     </ion-item>
+
 
     <!-- Modal controlado por boolean -->
     <ion-modal [isOpen]="roleModalOpen" (didDismiss)="roleModalOpen = false" [initialBreakpoint]="0.75"
@@ -62,8 +64,9 @@
         <ion-header>
           <ion-toolbar>
             <ion-title>Selecionar papel</ion-title>
+            <!-- FECHAR agora COMMITA a seleção -->
             <ion-buttons slot="end">
-              <ion-button (click)="closeRolePicker()">Fechar</ion-button>
+              <ion-button (click)="closeRolePicker(true)">Fechar</ion-button>
             </ion-buttons>
           </ion-toolbar>
           <ion-toolbar>
@@ -75,7 +78,8 @@
         <ion-content>
           <ion-list>
             <ion-radio-group [value]="tempSelectedRoleId" (ionChange)="onRoleRadioChange($event)">
-              <ion-item *ngFor="let r of rolesFiltered; trackBy: trackRole" (click)="tempSelectedRoleId = r.id">
+              <!-- Toque no item já CONFIRMA e fecha -->
+              <ion-item *ngFor="let r of rolesFiltered; trackBy: trackRole" (click)="confirmRolePicker(r.id)">
                 <ion-radio slot="start" [value]="r.id"></ion-radio>
                 <ion-label>
                   <div class="role-row">
@@ -92,7 +96,7 @@
         <ion-footer>
           <ion-toolbar>
             <ion-buttons slot="end">
-              <ion-button fill="clear" (click)="closeRolePicker()">Cancelar</ion-button>
+              <ion-button fill="clear" (click)="closeRolePicker(false)">Cancelar</ion-button>
               <ion-button [disabled]="tempSelectedRoleId == null" (click)="confirmRolePicker()">Selecionar</ion-button>
             </ion-buttons>
           </ion-toolbar>
