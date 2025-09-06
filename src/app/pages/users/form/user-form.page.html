@@ -1,0 +1,187 @@
+<!-- user-details.page.html - VERSÃO UNIFICADA -->
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button (click)="onBack()">
+        <ion-icon name="chevron-back-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>{{ isEdit ? 'Editar Usuário' : 'Novo Usuário' }}</ion-title>
+
+    <!-- Indicador de loading no header -->
+    <ion-buttons slot="end" *ngIf="isLoading">
+      <ion-spinner name="crescent"></ion-spinner>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <!-- Loading overlay para carregamento inicial -->
+  <div *ngIf="isLoading && isEdit" class="loading-overlay">
+    <ion-spinner name="bubbles"></ion-spinner>
+    <p>Carregando usuário...</p>
+  </div>
+
+  <!-- Formulário principal -->
+  <div class="edit-profile-screen" *ngIf="!isLoading || !isEdit">
+
+    <!-- CAMPO NOME -->
+    <ion-label position="inline" class="lbl">
+      Nome <ion-text color="danger">*</ion-text>
+    </ion-label>
+    <ion-item lines="none" class="item-content" [class.item-error]="hasError('name')">
+      <ion-input type="text" placeholder="Digite o nome completo" [(ngModel)]="user.name"
+        (ionBlur)="validateField('name', user.name)" [disabled]="isLoading">
+      </ion-input>
+    </ion-item>
+    <ion-note *ngIf="hasError('name')" color="danger" class="error-message">
+      <ion-icon name="alert-circle" size="small"></ion-icon>
+      {{ getError('name') }}
+    </ion-note>
+
+    <!-- CAMPO EMAIL -->
+    <ion-label position="inline" class="lbl">
+      Email <ion-text color="danger">*</ion-text>
+    </ion-label>
+    <ion-item lines="none" class="item-content" [class.item-error]="hasError('email')">
+      <ion-input type="email" placeholder="Digite o email" [(ngModel)]="user.email"
+        (ionBlur)="validateField('email', user.email)" [disabled]="isLoading">
+      </ion-input>
+    </ion-item>
+    <ion-note *ngIf="hasError('email')" color="danger" class="error-message">
+      <ion-icon name="alert-circle" size="small"></ion-icon>
+      {{ getError('email') }}
+    </ion-note>
+
+    <!-- CAMPO SENHA -->
+    <ion-label position="inline" class="lbl">
+      Senha
+      <ion-text color="danger" *ngIf="!isEdit">*</ion-text>
+      <ion-text color="medium" *ngIf="isEdit">(deixe vazio para manter a atual)</ion-text>
+    </ion-label>
+    <ion-item lines="none" class="item-content" [class.item-error]="hasError('password')">
+      <ion-input type="password" placeholder="{{ isEdit ? 'Nova senha (opcional)' : 'Digite a senha' }}"
+        [(ngModel)]="user.password" (ionBlur)="validateField('password', user.password)" [disabled]="isLoading">
+      </ion-input>
+    </ion-item>
+    <ion-note *ngIf="hasError('password')" color="danger" class="error-message">
+      <ion-icon name="alert-circle" size="small"></ion-icon>
+      {{ getError('password') }}
+    </ion-note>
+
+    <!-- CONFIRMAR SENHA -->
+    <ion-label position="inline" class="lbl" *ngIf="user.password">
+      Confirmar Senha <ion-text color="danger">*</ion-text>
+    </ion-label>
+    <ion-item *ngIf="user.password" lines="none" class="item-content" [class.item-error]="hasError('confirmPassword')">
+      <ion-input type="password" placeholder="Confirme a senha" [(ngModel)]="confirmPassword"
+        (ionBlur)="validateField('confirmPassword', confirmPassword)" [disabled]="isLoading">
+      </ion-input>
+    </ion-item>
+    <ion-note *ngIf="hasError('confirmPassword')" color="danger" class="error-message">
+      <ion-icon name="alert-circle" size="small"></ion-icon>
+      {{ getError('confirmPassword') }}
+    </ion-note>
+
+    <!-- SELETOR DE PAPEL -->
+    <ion-label position="inline" class="lbl">
+      Papel <ion-text color="danger" *ngIf="!isEdit">*</ion-text>
+    </ion-label>
+    <ion-item lines="none" class="item-content" button detail (click)="openRolePicker()" [disabled]="isLoading"
+      [class.item-error]="hasError('role_id')">
+      <ion-label>
+        <div>{{ selectedRoleName || 'Selecione um papel' }}</div>
+        <ion-note *ngIf="user?.role?.description">{{ user.role?.description }}</ion-note>
+      </ion-label>
+      <ng-container *ngIf="selectedRoleName as roleName">
+        <ion-badge [color]="roleColor(roleName)">{{ roleName }}</ion-badge>
+      </ng-container>
+      <ion-icon *ngIf="!selectedRoleName" name="chevron-forward" slot="end" color="medium">
+      </ion-icon>
+    </ion-item>
+    <ion-note *ngIf="hasError('role_id')" color="danger" class="error-message">
+      <ion-icon name="alert-circle" size="small"></ion-icon>
+      {{ getError('role_id') }}
+    </ion-note>
+
+    <!-- MODAL DE SELEÇÃO DE PAPEL -->
+    <ion-modal [isOpen]="roleModalOpen" (didDismiss)="roleModalOpen = false" [initialBreakpoint]="0.75"
+      [breakpoints]="[0,0.5,0.75,1]">
+      <ng-template>
+        <ion-header>
+          <ion-toolbar>
+            <ion-title>Selecionar Papel</ion-title>
+            <ion-buttons slot="end">
+              <ion-button (click)="closeRolePicker(true)">Fechar</ion-button>
+            </ion-buttons>
+          </ion-toolbar>
+          <ion-toolbar>
+            <ion-searchbar placeholder="Buscar papel..." debounce="300" (ionInput)="onRoleSearch($event)">
+            </ion-searchbar>
+          </ion-toolbar>
+        </ion-header>
+
+        <ion-content>
+          <!-- Lista vazia -->
+          <div *ngIf="rolesFiltered.length === 0" class="empty-state">
+            <ion-icon name="search-outline" size="large" color="medium"></ion-icon>
+            <p color="medium">Nenhum papel encontrado</p>
+          </div>
+
+          <!-- Lista de papéis -->
+          <ion-list *ngIf="rolesFiltered.length > 0">
+            <ion-radio-group [value]="tempSelectedRoleId" (ionChange)="onRoleRadioChange($event)">
+              <ion-item *ngFor="let r of rolesFiltered; trackBy: trackRole" (click)="confirmRolePicker(r.id)"
+                class="role-item">
+                <ion-radio slot="start" [value]="r.id"></ion-radio>
+                <ion-label>
+                  <div class="role-row">
+                    <strong>{{ r.name }}</strong>
+                    <ion-badge [color]="roleColor(r.name)">{{ r.name }}</ion-badge>
+                  </div>
+                  <ion-note *ngIf="r.description">{{ r.description }}</ion-note>
+                </ion-label>
+              </ion-item>
+            </ion-radio-group>
+          </ion-list>
+        </ion-content>
+
+        <ion-footer>
+          <ion-toolbar>
+            <ion-buttons slot="end">
+              <ion-button fill="clear" (click)="closeRolePicker(false)">
+                Cancelar
+              </ion-button>
+              <ion-button [disabled]="tempSelectedRoleId == null" (click)="confirmRolePicker()">
+                Selecionar
+              </ion-button>
+            </ion-buttons>
+          </ion-toolbar>
+        </ion-footer>
+      </ng-template>
+    </ion-modal>
+
+  </div>
+
+  <!-- BOTÕES DE AÇÃO -->
+  <div class="ion-padding-top" *ngIf="!isLoading || !isEdit">
+    <ion-button expand="block" (click)="save()" [disabled]="isLoading" color="primary">
+      <ion-spinner *ngIf="isLoading" name="crescent" slot="start"></ion-spinner>
+      {{ isEdit ? 'Atualizar' : 'Criar Usuário' }}
+    </ion-button>
+
+    <ion-button expand="block" fill="clear" color="medium" (click)="onBack()" [disabled]="isLoading">
+      Cancelar
+    </ion-button>
+  </div>
+
+  <!-- Indicador de modo atual (debug) -->
+  <ion-card *ngIf="false" class="debug-card">
+    <ion-card-content>
+
+      <p><strong>Modo:</strong> {{ isEdit ? 'Edição' : 'Criação' }}</p>
+      <p><strong>User ID:</strong> {{ user.id || 'N/A' }}</p>
+      <p><strong>Loading:</strong> {{ isLoading ? 'Sim' : 'Não' }}</p>
+    </ion-card-content>
+  </ion-card>
+</ion-content>

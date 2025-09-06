@@ -1,0 +1,247 @@
+/* user-details.page.scss - ESTILOS UNIFICADOS (fix inputs escuros) */
+
+/* === LAYOUT PRINCIPAL === */
+.edit-profile-screen {
+  padding: 16px 0;
+}
+
+/* === LABELS E CAMPOS === */
+.lbl {
+  font-weight: 600;
+  font-size: 14px;
+  margin-bottom: 8px;
+  display: block;
+  color: var(--ion-text-color, var(--ion-color-dark));
+}
+
+.item-content {
+  /* use o background padrão de item do Ionic */
+  --background: var(--ion-item-background, var(--ion-color-light));
+  --border-radius: 12px;
+  --padding-start: 16px;
+  --padding-end: 16px;
+  --min-height: 48px;
+  margin-bottom: 4px;
+
+  /* inputs transparentes, texto visível e placeholder suave */
+  ion-input,
+  ion-textarea,
+  ion-select,
+  ion-datetime {
+    --background: transparent;
+    --color: var(--ion-text-color, var(--ion-color-dark));
+    --placeholder-color: var(--ion-color-medium);
+    font-size: 16px;
+  }
+}
+
+/* === ESTADOS DE ERRO === */
+.item-error {
+  --background: rgba(var(--ion-color-danger-rgb), 0.08);
+  --border-color: var(--ion-color-danger);
+  border: 1px solid var(--border-color);
+}
+
+.error-message {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  margin: 4px 0 16px;
+  padding-left: 16px;
+  ion-icon {
+    flex-shrink: 0;
+  }
+}
+
+/* === LOADING === */
+.loading-overlay {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 200px;
+  gap: 16px;
+  p {
+    color: var(--ion-color-medium);
+    margin: 0;
+  }
+}
+
+/* === ROLE SELECTION === */
+.role-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+.role-item {
+  --padding-start: 16px;
+  --padding-end: 16px;
+  --min-height: 60px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  &:hover {
+    --background: var(--ion-color-light);
+  }
+}
+
+/* === MODAL ALERT === */
+.role-select-pop {
+  .alert-title {
+    font-weight: 700;
+  }
+  .alert-wrapper {
+    border-radius: 16px;
+  }
+  .alert-radio-label {
+    font-size: 16px;
+  }
+}
+
+/* === EMPTY STATE === */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 24px;
+  text-align: center;
+  ion-icon {
+    margin-bottom: 16px;
+    opacity: 0.5;
+  }
+  p {
+    margin: 0;
+    opacity: 0.7;
+  }
+}
+
+/* === BUTTONS === */
+ion-button {
+  --border-radius: 12px;
+  height: 48px;
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+
+/* === BADGES === */
+ion-badge {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* === RESPONSIVO === */
+@media (max-width: 768px) {
+  .edit-profile-screen {
+    padding: 12px 0;
+  }
+  .lbl {
+    font-size: 13px;
+  }
+  .item-content {
+    --min-height: 44px;
+    --padding-start: 12px;
+    --padding-end: 12px;
+  }
+}
+
+/* === DEBUG CARD (opcional) === */
+.debug-card {
+  margin-top: 24px;
+  background: var(--ion-color-warning);
+  color: var(--ion-color-warning-contrast);
+  ion-card-content {
+    padding: 12px;
+    p {
+      margin: 4px 0;
+      font-size: 12px;
+      strong {
+        font-weight: 600;
+      }
+    }
+  }
+}
+
+/* === ANIMAÇÃO ENTRADA === */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.edit-profile-screen {
+  animation: fadeInUp 0.3s ease-out;
+}
+
+/* === ACESSIBILIDADE (foco) === */
+.item-content:focus-within {
+  --border-color: var(--ion-color-primary);
+  border: 2px solid var(--border-color);
+}
+
+/* === DARK MODE SUPPORT (corrigido) === */
+@media (prefers-color-scheme: dark) {
+  .item-content {
+    /* use um tom neutro, NÃO o --ion-color-dark (quase preto) */
+    --background: var(--ion-item-background, var(--ion-color-step-150));
+  }
+
+  /* força contraste do label “título” acima dos campos */
+  .lbl {
+    color: var(
+      --ion-text-color
+    ) !important; /* usa o texto de alto contraste do tema */
+    opacity: 1 !important;
+  }
+
+  .item-content ion-input,
+  .item-content ion-textarea,
+  .item-content ion-select,
+  .item-content ion-datetime {
+    --color: var(--ion-text-color, var(--ion-color-light));
+    --placeholder-color: var(--ion-color-medium);
+  }
+
+  .item-error {
+    --background: rgba(var(--ion-color-danger-rgb), 0.16);
+  }
+}
+
+/* força contraste do label “título” acima dos campos */
+.lbl {
+  color: var(
+    --ion-text-color
+  ) !important; /* usa o texto de alto contraste do tema */
+  opacity: 1 !important;
+}
+
+/* garante que tudo dentro do item herde texto forte */
+.item-content {
+  --color: var(
+    --ion-text-color
+  ); /* afeta ion-label, ion-text etc. slotted no ion-item */
+}
+
+/* se ainda houver label fraco dentro do item, reforça */
+.item-content > ion-label,
+.item-content ion-label {
+  color: var(--ion-text-color) !important;
+  opacity: 1 !important;
+}
+
+/* dark mode: mantém alto contraste também */
+@media (prefers-color-scheme: dark) {
+  .lbl {
+    color: var(--ion-text-color) !important;
+  }
+  .item-content {
+    --color: var(--ion-text-color);
+  }
+}

@@ -11,3 +11,7 @@
 .name { font-weight: 600; display: flex; align-items: center; gap: 6px; }
 .email { opacity: .7; }
 .ml-1 { margin-left: 6px; }
+
+.confirm-alert {
+  .alert-message strong { font-weight: 700; }   /* garante negrito */
+}

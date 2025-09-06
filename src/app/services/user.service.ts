@@ -1,48 +1,55 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { map, Observable, tap } from 'rxjs';
-import { User } from '../models/user.model'; // Importe o modelo de usuário que você criou
+import { Observable } from 'rxjs';
+import { User, Paginator } from '../models/user.model';
 import { environment } from 'src/environments/environment';
-import { ApiResponse, Paginated } from '../models/util.model';
+
+export interface ApiResponse<T> { message?: string; data: T; }
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserService {
-  private apiUrl = `${environment.apiUrl}/users`;  // URL da API Laravel
+  private apiUrl = `${environment.apiUrl}/users`; // Substitua pela sua URL
 
   constructor(private http: HttpClient) { }
 
-  // Método para obter todos os usuários
-  getUsers(page = 1): Observable<User[]> {
-    return this.http.get<any>(`${this.apiUrl}?page=${page}`).pipe(
-      map(res => res?.data ?? [])
-    );
-  }
-
-  // Método para obter um usuário específico por ID
+  /**
+   * Buscar usuário por ID
+   */
   getUser(id: number): Observable<User> {
     return this.http.get<User>(`${this.apiUrl}/${id}`);
   }
 
-  // Método para criar um novo usuário
-  createUser(user: User): Observable<User> {
-    return this.http.post<User>(this.apiUrl, user);
+  getUsersPage(page = 1, search = '', perPage = 10)
+    : Observable<ApiResponse<Paginator<User>>> {
+    let params = new HttpParams()
+      .set('page', page)
+      .set('per_page', perPage);
+    if (search) params = params.set('search', search);
+
+    return this.http.get<ApiResponse<Paginator<User>>>(`${this.apiUrl}`, { params });
   }
 
-  // Método para atualizar um usuário existente
-  updateUser(id: number, payload: Partial<User> & { password_confirmation?: string }): Observable<ApiResponse<User>> {
+  updateUser(id: number, payload: Partial<User> & { password_confirmation?: string }) {
     return this.http.put<ApiResponse<User>>(`${this.apiUrl}/${id}`, payload);
   }
 
-  // Método para excluir um usuário por ID
-  deleteUser(id: number): Observable<void> { return this.http.delete<void>(`${this.apiUrl}/${id}`); }
+  createUser(payload: Partial<User> & { password: string; password_confirmation?: string }) {
+    return this.http.post<ApiResponse<User>>(this.apiUrl, payload);
+  }
 
-  getUsersPage(page = 1, search = '', perPage = 10) {
-    let params = new HttpParams().set('page', page).set('per_page', perPage);
-    if (search) params = params.set('search', search);
-    return this.http
-      .get<ApiResponse<Paginated<User>>>(this.apiUrl, { params })
-      .pipe(map(res => res.data)); // wrapper {message, data}
+  /**
+   * Listar todos os usuários
+   */
+  getUsers(): Observable<User[]> {
+    return this.http.get<User[]>(`${this.apiUrl}`);
+  }
+
+  /**
+   * Deletar usuário
+   */
+  deleteUser(id: number): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/${id}`);
   }
 }

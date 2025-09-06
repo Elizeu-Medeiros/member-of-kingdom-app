@@ -12,9 +12,7 @@
 
   <!-- Barra de busca (corrigido: use ionInput, não ionRefresh) -->
   <ion-toolbar mode="ios" color="light">
-    <ion-searchbar placeholder="Nome, Email" inputmode="text" type="text" mode="ios" animated debounce="300"
-      (ionInput)="onSearch($event)" (ionClear)="onSearchCleared()">
-    </ion-searchbar>
+    <ion-searchbar placeholder="Nome, Email" (ionInput)="onSearchInput($event)"></ion-searchbar>
   </ion-toolbar>
 </ion-header>
 
@@ -40,7 +38,7 @@
   <!-- Lista real com ações rápidas (clique abre detalhes; swipe edita/exclui) -->
   <ion-list *ngIf="!loading">
     <ion-item-sliding *ngFor="let u of users; trackBy: trackById">
-      <ion-item button detail (click)="goToDetails(u)">
+      <ion-item button detail (click)="goToForm(u)">
         <ion-avatar slot="start" class="avatar">
           <ion-text>{{ getInitials(u.name) }}</ion-text>
         </ion-avatar>
@@ -69,6 +67,10 @@
 
   <!-- Sentinela do infinite (IntersectionObserver) -->
   <div #sentinel class="sentinel"></div>
+  <ion-infinite-scroll (ionInfinite)="onLoadMore($event)" [disabled]="!hasMore">
+    <ion-infinite-scroll-content loadingSpinner="dots"></ion-infinite-scroll-content>
+  </ion-infinite-scroll>
+
 
   <!-- FAB de cadastro (opção estilo Android) -->
   <ion-fab vertical="bottom" horizontal="end" slot="fixed">
