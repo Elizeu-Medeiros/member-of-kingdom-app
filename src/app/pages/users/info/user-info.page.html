@@ -1,0 +1,110 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar mode="ios">
+    <ion-buttons slot="start">
+      <ion-button (click)="onBack()" color="dark">
+        <ion-icon slot="icon-only" name="arrow-back-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-buttons slot="end">
+      <ion-button color="dark">
+        <ion-icon slot="icon-only" src="assets/icon/bell.svg"></ion-icon>
+      </ion-button>
+      <ion-button color="dark">
+        <ion-icon slot="icon-only" src="assets/icon/search.svg"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <div class="doctor-info-screen">
+    <ion-card mode="ios" class="card-content">
+      <ion-row class="row-content" *ngIf="user as u; else empty">
+        <ion-col size="3">
+          <div class="doc-cover" [ngStyle]="{'background-image': 'url(getAvatarUrl(u))'}"></div>
+        </ion-col>
+        <ion-col size="9">
+          <div class="name-content">
+            <ion-label class="type"> {{ u.role?.description }} </ion-label>
+            <ion-label class="name"> {{ u.name }} </ion-label>
+            <ion-label class="email">{{ u.email }}</ion-label>
+            <div class="rates">
+              <ion-icon slot="icon-only" name="star" color="warning"></ion-icon>
+              <ion-icon slot="icon-only" name="star" color="warning"></ion-icon>
+              <ion-icon slot="icon-only" name="star" color="warning"></ion-icon>
+              <ion-icon slot="icon-only" name="star" color="warning"></ion-icon>
+              <ion-icon slot="icon-only" name="star-outline" color="dark"></ion-icon>
+              <ion-label class="lbl">(528)</ion-label>
+            </div>
+          </div>
+        </ion-col>
+      </ion-row>
+
+      <ion-row class="row-bottom">
+        <ion-col size="6">
+          <div class="data-content">
+            <ion-icon name="earth-outline" color="dark"></ion-icon>
+            <ion-label class="lbl">5K+ Patients</ion-label>
+          </div>
+        </ion-col>
+        <ion-col size="6">
+          <div class="data-content">
+            <ion-icon name="calendar-outline" color="dark"></ion-icon>
+            <ion-label class="lbl">5+ Year Experience</ion-label>
+          </div>
+        </ion-col>
+      </ion-row>
+    </ion-card>
+
+    <!-- Fallback exibido quando não há user -->
+    <ng-template #empty>
+      <div class="empty-state ion-text-center ion-padding">
+        <ion-icon name="alert-circle-outline" size="large"></ion-icon>
+        <p>No user data to show.</p>
+        <ion-button class="ion-margin-top" (click)="onBack()" fill="clear">Back</ion-button>
+      </div>
+    </ng-template>
+
+    <div class="more-btn">
+      <div class="ion-activatable ripple-parent btn">
+        <ion-ripple-effect></ion-ripple-effect>
+        <ion-icon name="call" color="light"></ion-icon>
+      </div>
+
+      <div class="ion-activatable ripple-parent btn">
+        <ion-ripple-effect></ion-ripple-effect>
+        <ion-icon name="chatbubble-ellipses" color="light"></ion-icon>
+      </div>
+
+      <div class="ion-activatable ripple-parent btn">
+        <ion-ripple-effect></ion-ripple-effect>
+        <ion-icon name="videocam" color="light"></ion-icon>
+      </div>
+
+      <div class="ion-activatable ripple-parent btn">
+        <ion-ripple-effect></ion-ripple-effect>
+        <ion-icon name="barcode" color="light"></ion-icon>
+      </div>
+    </div>
+
+    <!-- <ion-label class="main-title">Biography:</ion-label>
+    <ion-label class="desc">
+      Stulti autem malorum memoria torquentur, sapientes bona praeterita grata recordatione renovata delectant eadem
+      ille sanabat.
+    </ion-label>
+    <ion-label class="desc">
+      Nec lapathi suavitatem acupenseri Galloni Laelius anteponebat, sed suavitatem ipsam.
+    </ion-label>
+    <ion-label class="main-title">Working Time:</ion-label>
+    <ion-label class="desc">Mon - Sat ( 09:30AM - 09:00PM)</ion-label>
+    <ion-label class="main-title">Location:</ion-label>
+    <img src="assets/images/images/map.jpg" alt="" class="location-img"> -->
+  </div>
+</ion-content>
+<!-- <ion-footer>
+  <ion-toolbar>
+    <ion-button expand="block" fill="solid" shape="round" color="primary" (click)="onBook()">
+      Book Appointment
+    </ion-button>
+  </ion-toolbar>
+</ion-footer> -->

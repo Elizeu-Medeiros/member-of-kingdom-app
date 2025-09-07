@@ -4,11 +4,12 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { UsersPage } from './list/users.page';
 import { UserFormPage } from './form/user-form.page';
+import { UserInfoPage } from './info/user-info.page';
 
 const routes: Routes = [
   { path: '', component: UsersPage },
   { path: 'form', component: UserFormPage },    // /tabs/users/details  (modo criar)
-  // { path: 'details/:id', component: UserFormPage } // /tabs/users/details/123 (modo editar)
+  { path: 'info', component: UserInfoPage }
 ];
 
 @NgModule({

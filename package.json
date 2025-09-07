@@ -1,8 +1,8 @@
 {
-  "name": "doctor-appointment",
+  "name": "member-of-kingdom",
   "version": "0.0.1",
-  "author": "Ionic Framework",
-  "homepage": "https://ionicframework.com/",
+  "author": "Elizeu Medeiros",
+  "homepage": "https://elizeu-medeiros.github.io/portfolio/",
   "scripts": {
     "ng": "ng",
     "start": "ng serve --proxy-config proxy.conf.json",

@@ -38,7 +38,7 @@
   <!-- Lista real com ações rápidas (clique abre detalhes; swipe edita/exclui) -->
   <ion-list *ngIf="!loading">
     <ion-item-sliding *ngFor="let u of users; trackBy: trackById">
-      <ion-item button detail (click)="goToForm(u)">
+      <ion-item button detail (click)="onInfo(u)">
         <ion-avatar slot="start" class="avatar">
           <ion-text>{{ getInitials(u.name) }}</ion-text>
         </ion-avatar>

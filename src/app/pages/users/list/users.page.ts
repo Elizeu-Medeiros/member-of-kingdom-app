@@ -169,9 +169,6 @@ export class UsersPage implements OnInit {
     return (parts[0]?.[0] || '').concat(parts[1]?.[0] || '').toUpperCase();
   }
 
-  goToForm(u: User) {
-    this.router.navigate(['/tabs', 'users', 'form', u.id]);
-  }
   async confirmDelete(u: User) {
     const alert = await this.alertCtrl.create({
       header: 'Excluir usuário',
@@ -194,6 +191,17 @@ export class UsersPage implements OnInit {
 
     // navega SEM id, levando o objeto no state
     this.router.navigate(['form'], {
+      relativeTo: this.route,
+      state: { user: u }
+    });
+  }
+
+  onInfo(u: User) {
+    // guarda para sobreviver a F5
+    sessionStorage.setItem('user_info', JSON.stringify(u));
+
+    // navega SEM id, levando o objeto no state
+    this.router.navigate(['info'], {
       relativeTo: this.route,
       state: { user: u }
     });
