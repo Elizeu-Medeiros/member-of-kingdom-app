@@ -310,6 +310,7 @@ export class UserFormPage implements OnInit {
             response?.message || 'Usuário criado com sucesso!',
             'success'
           );
+          sessionStorage.setItem('users_dirty', '1');
           this.util.onBack();
           resolve(response);
         },
@@ -329,6 +330,7 @@ export class UserFormPage implements OnInit {
             response?.message || 'Usuário atualizado com sucesso!',
             'success'
           );
+          sessionStorage.setItem('users_dirty', '1');
           this.util.onBack();
           resolve(response);
         },

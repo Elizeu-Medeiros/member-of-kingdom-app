@@ -63,6 +63,26 @@ export class UsersPage implements OnInit {
   ionViewWillEnter() {
     // Se quiser recarregar sempre que voltar para a aba:
     // this.loadUsers();
+    // this.loadPage(1, false);
+    // this.isIOS = this.util.isIos();
+    // sessionStorage.removeItem('users_dirty');
+    this.refreshIfDirty();
+  }
+
+  private async refreshIfDirty() {
+    if (sessionStorage.getItem('users_dirty') === '1') {
+      sessionStorage.removeItem('users_dirty');
+
+      // opcional: sobe pro topo antes de recarregar
+      this.content?.scrollToTop(0);
+
+      // sua função que zera e busca página 1
+      this.resetAndLoad();
+
+      // se você quiser mostrar uma msg passada via history.state.toast:
+      const msg = history.state?.toast;
+      if (msg) (await this.toastCtrl.create({ message: msg, duration: 1500 })).present();
+    }
   }
 
   ngOnDestroy() {
@@ -232,6 +252,7 @@ export class UsersPage implements OnInit {
       .subscribe({
         next: async () => {
           this.users = this.users.filter(x => x.id !== u.id);
+          sessionStorage.setItem('users_dirty', '1');
           (await this.toastCtrl.create({ message: 'Usuário excluído', duration: 1500 })).present();
         },
         error: async (err) => {

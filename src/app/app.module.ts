@@ -16,8 +16,8 @@ import { LoginPageRoutingModule } from './pages/login/login-routing.module';
   declarations: [AppComponent],
   imports: [
     BrowserModule,
-    // IonicModule.forRoot(),
-    IonicModule.forRoot({ mode: 'ios' }),
+    IonicModule.forRoot(),
+    // IonicModule.forRoot({ mode: 'ios' }),
     AppRoutingModule,
     HttpClientModule,
     FormsModule,

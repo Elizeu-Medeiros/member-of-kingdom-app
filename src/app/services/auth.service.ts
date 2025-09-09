@@ -30,7 +30,7 @@ export class AuthService {
 
   // Sign in
   signIn(email: string, password: string): Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}/login`, { email, password }).pipe(
+    return this.http.post<any>(`${this.apiUrl}/login`, { email, password }, { withCredentials: true }).pipe(
       tap(response => {
         // Salva o token e os dados do usuário no local storage
         this.tokenService.setToken(response.access_token);
@@ -41,7 +41,7 @@ export class AuthService {
 
   // Sign up
   signUp(email: string, password: string): Observable<any> {
-    return this.http.post(`${this.apiUrl}/signup`, { email, password });
+    return this.http.post(`${this.apiUrl}/signup`, { email, password }, { withCredentials: true });
   }
 
   // Sign out
@@ -64,11 +64,11 @@ export class AuthService {
   }
 
   sendResetLink(email: string): Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}/password/email`, { email });
+    return this.http.post<any>(`${this.apiUrl}/password/email`, { email }, { withCredentials: true });
   }
 
   resetPassword(email: string, password: string, token: string): Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}/password/reset`, { email, password, token });
+    return this.http.post<any>(`${this.apiUrl}/password/reset`, { email, password, token }, { withCredentials: true });
   }
 
 }
