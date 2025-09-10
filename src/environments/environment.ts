@@ -1,5 +1,5 @@
 
 export const environment = {
-  production: false,
-  apiUrl: 'http://localhost:8080/api'
+  production: true,
+  apiUrl: 'https://kingdom-laravel.ac4nuq.easypanel.host/api'
 };
