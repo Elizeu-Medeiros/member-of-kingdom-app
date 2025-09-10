@@ -1,9 +1,8 @@
-
 <ion-header class="ion-no-border">
   <ion-toolbar mode="ios">
     <ion-buttons slot="end">
-      <ion-button color="dark">
-        Skip
+      <ion-button color="dark" (click)="onAuth()">
+        Pular
       </ion-button>
     </ion-buttons>
   </ion-toolbar>
@@ -16,8 +15,16 @@
         <div class="info-slider">
           <img [src]="item.image" alt="" class="img">
           <div class="box-content">
-            <ion-label class="title"> {{item.title}} </ion-label>
-            <ion-label class="sub-title"> {{item.sub}} </ion-label>
+            <ion-label class="title">{{ item.title }}</ion-label>
+            <ion-label class="sub-title">{{ item.sub }}</ion-label>
+
+            <div class="features-list" *ngIf="item.features">
+              <div class="feature-item" *ngFor="let feature of item.features">
+                <ion-icon [name]="feature.icon" class="feature-icon"></ion-icon>
+                <span>{{ feature.text }}</span>
+              </div>
+            </div>
+
 
             <div class="dots">
               <div [ngClass]="activeIndex == 0 ? 'active':'deactive'"></div>
@@ -26,7 +33,7 @@
             </div>
 
             <ion-button expand="block" fill="solid" shape="round" color="light" (click)="onAuth()">
-              Get Started
+              Começar
             </ion-button>
           </div>
         </div>
