@@ -74,14 +74,14 @@
     h2 {
       font-size: 24px;
       font-weight: 700;
-      margin: 0 0 8px 0;
-      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      margin: 10px 10px 8px 10px !important;
+      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.1) !important;
     }
 
     p {
       font-size: 16px;
       opacity: 0.9;
-      margin: 10px 0 16px 0;
+      margin: 10px 30px 16px 30px !important;
       line-height: 1.4;
     }
   }
@@ -115,7 +115,7 @@
   gap: 8px;
   font-size: 18px;
   font-weight: 600;
-  color: var(--ion-color-dark);
+  color: var(--ion-color-dark) !important;
   margin: 24px 0 16px 0;
   padding: 0 16px;
 
@@ -176,7 +176,7 @@
       font-size: 24px;
       font-weight: 700;
       margin: 0 0 4px 0;
-      color: var(--ion-color-dark);
+      color: var(--ion-color-dark) !important;
     }
 
     p {
