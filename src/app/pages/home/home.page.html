@@ -1,5 +1,4 @@
-
-<ion-header class="ion-no-border">
+<!-- <ion-header class="ion-no-border">
   <ion-toolbar mode="md" color="light">
     <ion-buttons slot="start">
       <ion-avatar slot="start" class="toolbar-image">
@@ -7,7 +6,7 @@
       </ion-avatar>
     </ion-buttons>
     <ion-title>
-      <ion-label class="home-title">Olá, {{ user.name}}</ion-label>
+      <ion-label class="home-title">Olá, {{ user?.name}}</ion-label>
       <ion-label class="home-sub-title">Como você está hoje?</ion-label>
     </ion-title>
     <ion-buttons slot="end">
@@ -24,9 +23,281 @@
       <ion-label class="home-toolbar-lbl">Find Your Desired <span class="active">Doctor Right Now.!</span> </ion-label>
     </ion-title>
   </ion-toolbar>
+</ion-header> -->
+
+<ion-header class="ion-no-border">
+  <ion-toolbar mode="md">
+    <ion-buttons slot="start">
+      <ion-menu-button color="primary"></ion-menu-button>
+    </ion-buttons>
+
+    <ion-title>
+      <div class="header-title">
+        <!-- <ion-icon name="business" color="primary"></ion-icon> -->
+        <ion-item><img src="assets/images/images/logo_mk_75x75.png" width="40"></ion-item>
+        <span>Member of Kingdom</span>
+      </div>
+    </ion-title>
+
+    <ion-buttons slot="end">
+      <ion-button fill="clear" (click)="openNotifications()">
+        <ion-icon name="notifications" color="medium"></ion-icon>
+        <ion-badge *ngIf="notificationCount > 0" color="danger" class="notification-badge">
+          {{ notificationCount }}
+        </ion-badge>
+      </ion-button>
+
+      <ion-button fill="clear" (click)="openProfile()">
+        <ion-avatar class="user-avatar">
+          <img [src]="'assets/images/5.png'" [alt]="user?.name">
+        </ion-avatar>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
 </ion-header>
 
-<ion-content class="ion-padding">
+
+<ion-content>
+  <!-- Welcome Section -->
+  <div class="welcome-section">
+    <div class="welcome-content">
+      <h2>Olá, {{ user?.name || 'Usuário' }}! 👋</h2>
+      <p>{{ getWelcomeMessage() }}</p>
+    </div>
+    <div class="church-info">
+      <ion-chip color="primary" outline>
+        <ion-icon name="location" color="primary"></ion-icon>
+        <ion-label>{{ churchInfo?.name || 'Minha Igreja' }}</ion-label>
+      </ion-chip>
+    </div>
+  </div>
+
+  <!-- Quick Stats -->
+  <div class="stats-container">
+    <h3 class="section-title">
+      <ion-icon name="analytics" color="primary"></ion-icon>
+      Visão Geral
+    </h3>
+
+    <div class="stats-grid">
+      <!-- Total Members -->
+      <ion-card class="stat-card members-card" (click)="navigateTo('/members')">
+        <ion-card-content>
+          <div class="stat-icon">
+            <ion-icon name="people" color="primary"></ion-icon>
+          </div>
+          <div class="stat-info">
+            <h4>{{ stats?.totalMembers || 0 }}</h4>
+            <p>Total de Membros</p>
+            <div class="stat-change positive" *ngIf="getMemberGrowth() > 0">
+              <ion-icon name="trending-up"></ion-icon>
+              <span>+{{ stats?.memberGrowth }}% este mês</span>
+            </div>
+          </div>
+        </ion-card-content>
+      </ion-card>
+
+      <!-- Active Members -->
+      <ion-card class="stat-card active-card" (click)="navigateTo('/members', { filter: 'active' })">
+        <ion-card-content>
+          <div class="stat-icon">
+            <ion-icon name="heart" color="secondary"></ion-icon>
+          </div>
+          <div class="stat-info">
+            <h4>{{ stats?.activeMembers || 0 }}</h4>
+            <p>Membros Ativos</p>
+            <div class="stat-percentage">
+              <span>{{ getActivePercentage() }}% do total</span>
+            </div>
+          </div>
+        </ion-card-content>
+      </ion-card>
+
+      <!-- Upcoming Events -->
+      <ion-card class="stat-card events-card" (click)="navigateTo('/events')">
+        <ion-card-content>
+          <div class="stat-icon">
+            <ion-icon name="calendar" color="tertiary"></ion-icon>
+          </div>
+          <div class="stat-info">
+            <h4>{{ stats?.upcomingEvents || 0 }}</h4>
+            <p>Próximos Eventos</p>
+            <div class="stat-detail">
+              <span>Esta semana</span>
+            </div>
+          </div>
+        </ion-card-content>
+      </ion-card>
+
+      <!-- New Visitors -->
+      <ion-card class="stat-card visitors-card" (click)="navigateTo('/visitors')">
+        <ion-card-content>
+          <div class="stat-icon">
+            <ion-icon name="person-add" color="success"></ion-icon>
+          </div>
+          <div class="stat-info">
+            <h4>{{ stats?.newVisitors || 0 }}</h4>
+            <p>Novos Visitantes</p>
+            <div class="stat-detail">
+              <span>Este mês</span>
+            </div>
+          </div>
+        </ion-card-content>
+      </ion-card>
+    </div>
+  </div>
+
+  <!-- Quick Actions -->
+  <div class="actions-container">
+    <h3 class="section-title">
+      <ion-icon name="flash" color="primary"></ion-icon>
+      Ações Rápidas
+    </h3>
+
+    <div class="actions-grid">
+      <ion-button expand="block" fill="outline" class="action-button" (click)="navigateTo('/members/new')">
+        <ion-icon name="person-add" slot="start"></ion-icon>
+        Novo Membro
+      </ion-button>
+
+      <ion-button expand="block" fill="outline" class="action-button" (click)="navigateTo('/events/new')">
+        <ion-icon name="calendar-clear" slot="start"></ion-icon>
+        Criar Evento
+      </ion-button>
+
+      <ion-button expand="block" fill="outline" class="action-button" (click)="sendBulkMessage()">
+        <ion-icon name="chatbubbles" slot="start"></ion-icon>
+        Enviar Aviso
+      </ion-button>
+
+      <ion-button expand="block" fill="outline" class="action-button" (click)="navigateTo('/reports')">
+        <ion-icon name="document-text" slot="start"></ion-icon>
+        Relatórios
+      </ion-button>
+    </div>
+  </div>
+
+  <!-- Recent Activity -->
+  <div class="activity-container">
+    <h3 class="section-title">
+      <ion-icon name="time" color="primary"></ion-icon>
+      Atividades Recentes
+    </h3>
+
+    <ion-card class="activity-card">
+      <ion-card-content>
+        <div class="activity-list">
+
+          <div class="activity-item" *ngFor="let activity of recentActivities; trackBy: trackActivity">
+            <div class="activity-avatar">
+              <ion-avatar [class]="'activity-' + activity.type">
+                <ion-icon [name]="getActivityIcon(activity.type)"></ion-icon>
+              </ion-avatar>
+            </div>
+
+            <div class="activity-content">
+              <p class="activity-text">{{ activity.description }}</p>
+              <span class="activity-time">{{ formatActivityTime(activity.timestamp) }}</span>
+            </div>
+
+            <div class="activity-actions" *ngIf="activity.actionable">
+              <ion-button size="small" fill="clear" color="primary" (click)="handleActivity(activity)">
+                <ion-icon name="chevron-forward" slot="icon-only"></ion-icon>
+              </ion-button>
+            </div>
+          </div>
+
+          <!-- Empty State -->
+          <div class="empty-activity" *ngIf="!recentActivities?.length">
+            <ion-icon name="hourglass-outline" color="medium"></ion-icon>
+            <p>Nenhuma atividade recente</p>
+          </div>
+        </div>
+      </ion-card-content>
+    </ion-card>
+  </div>
+
+  <!-- Upcoming Events Preview -->
+  <div class="events-preview-container" *ngIf="upcomingEvents?.length">
+    <h3 class="section-title">
+      <ion-icon name="calendar-outline" color="primary"></ion-icon>
+      Próximos Eventos
+    </h3>
+
+    <ion-card class="events-card">
+      <ion-card-content>
+        <div class="event-item" *ngFor="let event of upcomingEvents; trackBy: trackEvent">
+          <div class="event-date">
+            <span class="event-day">{{ getEventDay(event.date) }}</span>
+            <span class="event-month">{{ getEventMonth(event.date) }}</span>
+          </div>
+
+          <div class="event-info">
+            <h4>{{ event.title }}</h4>
+            <p>
+              <ion-icon name="time-outline" color="medium"></ion-icon>
+              {{ formatEventTime(event.startTime) }}
+            </p>
+            <p>
+              <ion-icon name="location-outline" color="medium"></ion-icon>
+              {{ event.location || 'Local a definir' }}
+            </p>
+          </div>
+
+          <div class="event-actions">
+            <ion-chip [color]="getEventTypeColor(event.type)" outline>
+              {{ event.type }}
+            </ion-chip>
+            <ion-button size="small" fill="clear" (click)="viewEvent(event)">
+              <ion-icon name="eye" slot="icon-only"></ion-icon>
+            </ion-button>
+          </div>
+        </div>
+
+        <ion-button expand="block" fill="clear" size="small" class="view-all-button" (click)="navigateTo('/events')">
+          Ver Todos os Eventos
+          <ion-icon name="arrow-forward" slot="end"></ion-icon>
+        </ion-button>
+      </ion-card-content>
+    </ion-card>
+  </div>
+
+  <!-- Bottom Spacing -->
+  <div class="bottom-spacing"></div>
+</ion-content>
+
+<!-- Floating Action Button -->
+<ion-fab vertical="bottom" horizontal="end" slot="fixed">
+  <ion-fab-button color="primary" (click)="openQuickActions()">
+    <ion-icon name="add"></ion-icon>
+  </ion-fab-button>
+
+  <ion-fab-list side="top">
+    <ion-fab-button color="secondary" (click)="navigateTo('/members/new')">
+      <ion-icon name="person-add"></ion-icon>
+    </ion-fab-button>
+    <ion-fab-button color="tertiary" (click)="navigateTo('/events/new')">
+      <ion-icon name="calendar-clear"></ion-icon>
+    </ion-fab-button>
+    <ion-fab-button color="success" (click)="sendBulkMessage()">
+      <ion-icon name="chatbubbles"></ion-icon>
+    </ion-fab-button>
+  </ion-fab-list>
+</ion-fab>
+
+<!-- Loading Overlay -->
+<div class="loading-overlay" *ngIf="isLoading">
+  <ion-spinner name="crescent" color="primary"></ion-spinner>
+  <p>Carregando dados...</p>
+</div>
+
+<!-- Refresh Button for Pull-to-Refresh -->
+<ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+  <ion-refresher-content pullingIcon="chevron-down-circle-outline" pullingText="Puxe para atualizar"
+    refreshingSpinner="crescent" refreshingText="Atualizando...">
+  </ion-refresher-content>
+</ion-refresher>
+<!-- <ion-content class="ion-padding">
   <div class="home-screen">
     <div class="main-title">
       <ion-label class="title">Upcoming Schedule</ion-label>
@@ -87,4 +358,4 @@
       </ion-row>
     </div>
   </div>
-</ion-content>
+</ion-content> -->
