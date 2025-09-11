@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { User, Paginator } from '../models/user.model';
+import { User } from '../models/user.model';
 import { environment } from 'src/environments/environment';
+import { Paginator } from '../models/util.model';
 
 export interface ApiResponse<T> { message?: string; data: T; }
-
 @Injectable({
   providedIn: 'root'
 })
