@@ -5,23 +5,27 @@ import { FormsModule } from '@angular/forms';
 
 import { IonicModule } from '@ionic/angular';
 
-import { ListPeoplePageRoutingModule } from './list-people-routing.module';
+import { PeoplePageRoutingModule } from './people-routing.module';
 
-import { ListPeoplePage } from './list-people.page';
+import { PeopleListPage } from './list/people-list.page';
 import { PhonePipe } from 'src/app/pipes/phone.pipe';
 import { DatePipe } from 'src/app/pipes/date.pipe';
+import { PeopleFormPage } from './form/people-form.page';
+import { PeopleInfoPage } from './info/people-info.page';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    ListPeoplePageRoutingModule
+    PeoplePageRoutingModule
   ],
   declarations: [
-    ListPeoplePage,
+    PeopleListPage,
+    PeopleFormPage,
+    PeopleInfoPage,
     PhonePipe,
     DatePipe
   ]
 })
-export class ListPeoplePageModule { }
+export class PeoplePageModule { }

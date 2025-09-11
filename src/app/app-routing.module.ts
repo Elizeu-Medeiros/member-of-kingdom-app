@@ -103,7 +103,7 @@ const routes: Routes = [
   },
   {
     path: 'pessoas',
-    loadChildren: () => import('./pages/people/list-people/list-people.module').then(m => m.ListPeoplePageModule)
+    loadChildren: () => import('./pages/people/people.module').then(m => m.PeoplePageModule)
   },
   {
     path: 'register',

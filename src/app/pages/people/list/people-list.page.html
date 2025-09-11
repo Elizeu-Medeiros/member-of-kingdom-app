@@ -1,0 +1,116 @@
+<!-- <ion-header class="ion-no-border">
+  <ion-toolbar mode="ios" color="light">
+    <ion-title>Lista de Pessoas</ion-title>
+  </ion-toolbar>
+  <ion-toolbar mode="ios" color="light">
+    <ion-searchbar placeholder="Name, Categories" inputmode="text" type="text" mode="ios"></ion-searchbar>
+  </ion-toolbar>
+</ion-header>
+<ion-content class="ion-padding">
+  <div class="appointments-screen">
+    <ion-card mode="ios" class="ion-activatable ripple-parent card-content" *ngFor="let person of peopleList; let i = index;" (click)="onPersonInfo(person)">
+      <ion-ripple-effect></ion-ripple-effect>
+      <ion-row class="row-content">
+        <ion-col size="3">
+          <div class="person-photo" [ngStyle]="{'background-image': 'url(' + getAvatarUrl(person)  + ')'}"></div>
+          <div class="name-content">
+            <div class="status">
+              <span *ngIf="i % 2 != 0" class="green">Membro</span>
+              <span *ngIf="i % 2 == 0" class="yello">Visitante</span>
+            </div>
+          </div>
+        </ion-col>
+        <ion-col size="9">
+          <div class="name-content">
+            <ion-label class="name"> {{ person.name_full }} </ion-label>
+            <ion-label class="type"> {{ (person.cell_phone ?? '') | phone}} </ion-label>
+            <ion-label class="date"> {{ (person.birth_date ?? '') | formatDate }}</ion-label>
+          </div>
+        </ion-col>
+      </ion-row>
+    </ion-card>
+  </div>
+</ion-content> -->
+
+<ion-header class="ion-no-border">
+  <ion-toolbar mode="ios" color="light">
+    <ion-title>Lista de Pessoas</ion-title>
+
+    <!-- Botão CADASTRAR (novo) no header -->
+    <ion-buttons slot="end">
+      <ion-button (click)="onCreate()">
+        <ion-icon name="person-add-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+
+  <!-- Barra de busca (corrigido: use ionInput, não ionRefresh) -->
+  <ion-toolbar mode="ios" color="light">
+    <ion-searchbar placeholder="Nome, Email" (ionInput)="onSearchInput($event)"></ion-searchbar>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <!-- Pull to refresh -->
+  <ion-refresher slot="fixed" (ionRefresh)="onRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  <!-- Skeleton 1ª página -->
+  <ion-list *ngIf="loading">
+    <ion-item *ngFor="let s of [0,1,2,3,4]">
+      <ion-avatar slot="start">
+        <ion-skeleton-text animated style="width:40px;height:40px;border-radius:50%"></ion-skeleton-text>
+      </ion-avatar>
+      <ion-label>
+        <h3><ion-skeleton-text animated style="width:60%"></ion-skeleton-text></h3>
+        <p><ion-skeleton-text animated style="width:40%"></ion-skeleton-text></p>
+      </ion-label>
+    </ion-item>
+  </ion-list>
+
+  <!-- Lista real com ações rápidas (clique abre detalhes; swipe edita/exclui) -->
+  <ion-list *ngIf="!loading">
+    <ion-item-sliding *ngFor="let p of peoples; trackBy: trackById">
+      <ion-item button detail (click)="onInfo(p)">
+        <ion-avatar slot="start" class="avatar">
+          <ion-text>{{ getInitials(p.name_full) }}</ion-text>
+        </ion-avatar>
+
+        <ion-label>
+          <h2 class="name">{{ p.name_full }}</h2>
+          <p class="email">{{ p.cell_phone }}</p>
+          <p class="role">{{ p.type?.description || 'Sem cargo'}}</p>
+        </ion-label>
+
+      </ion-item>
+
+      <!-- Ações por swipe -->
+      <ion-item-options side="start">
+        <ion-item-option color="medium" (click)="onEdit(p)">Editar</ion-item-option>
+      </ion-item-options>
+      <ion-item-options side="end">
+        <ion-item-option color="danger" (click)="onDelete(p)">Excluir</ion-item-option>
+      </ion-item-options>
+    </ion-item-sliding>
+  </ion-list>
+
+  <!-- Estado vazio -->
+  <div class="ion-text-center ion-padding" *ngIf="!loading && peoples.length === 0">
+    Nenhum usuário encontrado
+  </div>
+
+  <!-- Sentinela do infinite (IntersectionObserver) -->
+  <div #sentinel class="sentinel"></div>
+  <ion-infinite-scroll (ionInfinite)="onLoadMore($event)" [disabled]="!hasMore">
+    <ion-infinite-scroll-content loadingSpinner="dots"></ion-infinite-scroll-content>
+  </ion-infinite-scroll>
+
+
+  <!-- FAB de cadastro (opção estilo Android) -->
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button (click)="onCreate()">
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+</ion-content>

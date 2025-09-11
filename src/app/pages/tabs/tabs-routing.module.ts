@@ -1,5 +1,3 @@
-import { ListPeoplePage } from '../people/list-people/list-people.page';
-
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { TabsPage } from './tabs.page';
@@ -41,7 +39,7 @@ const routes: Routes = [
         children: [
           {
             path: '',
-            loadChildren: () => import('../people/list-people/list-people.module').then(m => m.ListPeoplePageModule)
+            loadChildren: () => import('../people/people.module').then(m => m.PeoplePageModule)
           },
           {
             path: 'appointment-details',
