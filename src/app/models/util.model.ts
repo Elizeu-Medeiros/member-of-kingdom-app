@@ -1,17 +1,22 @@
 export interface LaravelLink { url: string | null; label: string; active: boolean; }
-export interface Paginated<T> {
+export interface Paginator<T> {
   current_page: number;
   data: T[];
-  first_page_url: string;
-  from: number;
+  first_page_url?: string;
+  from?: number;
   last_page: number;
-  last_page_url: string;
+  last_page_url?: string;
   links: LaravelLink[];
   next_page_url: string | null;
-  path: string;
+  path?: string;
   per_page: number;
   prev_page_url: string | null;
-  to: number;
+  to?: number;
   total: number;
 }
 export interface ApiResponse<T> { message?: string; data: T; }
+
+export interface ValidationErrors {
+  [key: string]: string[];
+}
+
